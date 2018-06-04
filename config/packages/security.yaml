@@ -8,6 +8,12 @@ security:
             security: false
         main:
             anonymous: true
+#        api:
+#          pattern:   ^/api
+#          stateless: true
+#          guard:
+#              authenticators:
+#                  - taliazauth
 
             # activate different ways to authenticate
 
