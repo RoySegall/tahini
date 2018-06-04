@@ -7,13 +7,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
-#        api:
-#          pattern:   ^/api
-#          stateless: true
-#          guard:
-#              authenticators:
-#                  - taliazauth
+            anonymous: ~
+            logout: ~
+
+            guard:
+                authenticators:
+                    - App\Security\TokenAuthenticator
 
             # activate different ways to authenticate
 
