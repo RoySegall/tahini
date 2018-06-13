@@ -98,8 +98,12 @@ class JobProcess extends AbstractController {
      *
      * @param int $id
      *  The ID of the job process.
+     * @param Request $request
+     *  The request service.
+     *
+     * @return JsonResponse
      */
-    public function update(int $id) {
+    public function update(int $id, Request $request) {
         $job = $this
             ->getDoctrine()
             ->getRepository(\App\Entity\JobProcess::class)
@@ -109,7 +113,7 @@ class JobProcess extends AbstractController {
             return $this->error('The is no job process with ' . $id);
         }
 
-        return new JsonResponse('a');
+        return new JsonResponse();
     }
 
     /**
