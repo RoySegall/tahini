@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Repository\JobProcessRepository;
 use App\Services\TaliazOldProcessor;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Get the job processes in the system.
@@ -27,6 +29,7 @@ class JobProcess extends AbstractController {
         'talResults' => 'tal_results',
         'modelRuntime' => 'model_runtime',
         'errorMessage' => 'error_message',
+        'modelBeagle' => 'model_beagle',
     ];
 
     /**
@@ -103,7 +106,7 @@ class JobProcess extends AbstractController {
      *
      * @return JsonResponse
      */
-    public function update(int $id, Request $request) {
+    public function update(int $id, Request $request, ValidatorInterface $validator, TaliazOldProcessor $processor) {
         $job = $this
             ->getDoctrine()
             ->getRepository(\App\Entity\JobProcess::class)
@@ -113,7 +116,64 @@ class JobProcess extends AbstractController {
             return $this->error('The is no job process with ' . $id);
         }
 
-        return new JsonResponse();
+        if (!$new_data = $this->processPayload($request)) {
+            return $this->error('The post is empty', Response::HTTP_BAD_REQUEST);
+        }
+
+        // Change the values.
+        $flipped = array_flip($this->mapper);
+
+        foreach ($new_data as $key => $value) {
+            $job->{$flipped[$key]} = $value;
+        }
+
+        if ($errors = $this->validate($job, $validator)) {
+            return $errors;
+        }
+
+        $processor->setMapper($this->mapper)->processRecord($job);
+
+        return new JsonResponse($job);
+    }
+
+    /**
+     * Validating the entity.
+     *
+     * todo: move to service.
+     *
+     * @param $entity
+     * @param ValidatorInterface $validator
+     *
+     * @return JsonResponse
+     */
+    protected function validate($entity, ValidatorInterface $validator) {
+        $errors = $validator->validate($entity);
+
+        $error_list = [];
+        foreach ($errors as $property => $error) {
+            $human_property = $this->mapper[$error->getPropertyPath()];
+            $error_list[$human_property][] = $error->getMessage();
+        }
+
+        if ($error_list) {
+            return $this->error(['message' => 'There are some errors in your request', 'errors' => $error_list], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Processing the payload.
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     *   Return the payload as an object.
+     */
+    protected function processPayload(Request $request) {
+        $content = $request->getContent();
+
+        if (!$decoded = json_decode($content, true)) {
+            return;
+        }
+
+        return new ArrayCollection($decoded);
     }
 
     /**

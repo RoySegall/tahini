@@ -5,6 +5,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Job process entity.
@@ -83,8 +84,13 @@ class JobProcess {
      * @var boolean When the record has updated.
      *
      * @ORM\Column(type="string", length=1)
+     *
+     * @Assert\Choice(
+     *     choices = {"0", "1"},
+     *     message = "The allowed values are '0' or '1'"
+     * )
      */
-    private $modelBeagle;
+    public $modelBeagle;
 
     /**
      * @var string The tal results of the test.
@@ -92,32 +98,5 @@ class JobProcess {
      * @ORM\Column(type="string", nullable=true)
      */
     public $errorMessage;
-
-    /**
-     * Set the beagle.
-     *
-     * According to doctrine, ENUM are not something we should use. Instead, we
-     * can limit the values within the setter.
-     *
-     * @param $beagle
-     *  The beagle value. Allowed values - 0 or 1.
-     */
-    public function setModelBeagle($beagle) {
-        if (!in_array($beagle, array(0, 1))) {
-            throw new \InvalidArgumentException("Invalid beagle");
-        }
-
-        $this->modelBeagle = $beagle;
-    }
-
-    /**
-     * Get the beagle mode.
-     *
-     * @return int
-     *  Return 0 or 1.
-     */
-    public function getModelBeagle() {
-        return $this->modelBeagle;
-    }
 
 }
