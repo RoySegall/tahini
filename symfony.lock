@@ -59,6 +59,9 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "kint-php/kint": {
+        "version": "2.2"
+    },
     "nelmio/cors-bundle": {
         "version": "1.5",
         "recipe": {

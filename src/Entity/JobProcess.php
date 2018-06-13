@@ -3,12 +3,11 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * Job process.
+ * Job process entity.
  *
  * @ApiResource
  * @ORM\Entity
@@ -57,7 +56,7 @@ class JobProcess {
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    public $tal_results;
+    public $talResults;
 
     /**
      * @var boolean When the record has created.
@@ -95,7 +94,13 @@ class JobProcess {
     public $errorMessage;
 
     /**
+     * Set the beagle.
+     *
+     * According to doctrine, ENUM are not something we should use. Instead, we
+     * can limit the values within the setter.
+     *
      * @param $beagle
+     *  The beagle value. Allowed values - 0 or 1.
      */
     public function setModelBeagle($beagle) {
         if (!in_array($beagle, array(0, 1))) {
@@ -105,6 +110,12 @@ class JobProcess {
         $this->modelBeagle = $beagle;
     }
 
+    /**
+     * Get the beagle mode.
+     *
+     * @return int
+     *  Return 0 or 1.
+     */
     public function getModelBeagle() {
         return $this->modelBeagle;
     }

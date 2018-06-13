@@ -2,14 +2,37 @@
 
 namespace App\Controller;
 
-use App\Entity\Book;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Controller with the basic information about the system.
+ */
 class DefaultController extends AbstractController {
 
-  public function index() {
-    return new JsonResponse(['welcome' => 'hello']);
-  }
+    public const VERSION = '2.1';
+
+    /**
+     * @Route("/", name="index")
+     *
+     * @param Request $request
+     *  The request object.
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *  Return a json info about the system.
+     */
+    public function index(Request $request) {
+        return $this->json([
+            'title' => 'Taliaz Health',
+            'Sys Admin' => [
+                'name'  => 'Sagee Lupin',
+                'email' => 'tech.team@taliazhealth.com',
+            ],
+            'version' => self::VERSION,
+            'env' => getenv('APP_ENV'),
+            'ip_address' => $request->getClientIp(),
+        ]);
+    }
 
 }
