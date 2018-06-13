@@ -20,7 +20,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return $request->getMethod() == Request::METHOD_POST;
+        return FALSE;
     }
 
     /**
@@ -64,7 +64,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = array(
-            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+            'message' => strtr('Unauthorized actions', $exception->getMessageData())
 
             // or to translate this message
             // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())

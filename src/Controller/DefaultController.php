@@ -14,7 +14,7 @@ class DefaultController extends AbstractController {
     public const VERSION = '2.1';
 
     /**
-     * @Route("/", name="index")
+     * @Route("/", methods={"GET"})
      *
      * @param Request $request
      *  The request object.

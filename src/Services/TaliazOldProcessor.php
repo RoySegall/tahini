@@ -4,6 +4,9 @@ namespace App\Services;
 
 class TaliazOldProcessor {
 
+    /**
+     * @var array
+     */
     protected $mapper;
 
     protected $objectsHandler = [
@@ -46,27 +49,30 @@ class TaliazOldProcessor {
      */
     public function processRecords(&$records): TaliazOldProcessor {
         foreach ($records as &$record) {
-            foreach (get_object_vars($record) as $property => $value) {
-
-                if ($property == 'id') {
-                    // We don't need to convert the id to string.
-                    continue;
-                }
-
-                if (!is_null($value)) {
-                    $record->{$property} = $this->handleValue($value);
-                }
-
-                if (!empty($this->mapper[$property])) {
-                    $value = $record->{$property};
-                    unset($record->{$property});
-                    $record->{$this->mapper[$property]} = $value;
-                }
-
-            }
+            $this->processRecord($record);
         }
 
         return $this;
+    }
+
+    public function processRecord(&$record) {
+        foreach (get_object_vars($record) as $property => $value) {
+
+            if ($property == 'id') {
+                // We don't need to convert the id to string.
+                continue;
+            }
+
+            if (!is_null($value)) {
+                $record->{$property} = $this->handleValue($value);
+            }
+
+            if (!empty($this->mapper[$property])) {
+                $value = $record->{$property};
+                unset($record->{$property});
+                $record->{$this->mapper[$property]} = $value;
+            }
+        }
     }
 
     /**

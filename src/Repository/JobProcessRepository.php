@@ -32,7 +32,11 @@ class JobProcessRepository extends ServiceEntityRepository {
      * @return mixed
      */
     public function getMaxJobProcesses($limit = 10) {
-        return $this->getQueryBuilder()->setMaxResults($limit)->getQuery()->execute();
+        return $this
+            ->getQueryBuilder()
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
     }
 
     /**
@@ -40,6 +44,9 @@ class JobProcessRepository extends ServiceEntityRepository {
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getTotalRows() {
-        return $this->getQueryBuilder()->select('count(jp)')->getQuery()->getSingleScalarResult();
+        return $this->getQueryBuilder()
+            ->select('count(jp)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

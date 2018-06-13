@@ -7,10 +7,13 @@ use App\Services\TaliazOldProcessor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Get the job processes in the system.
+ *
+ * @Route("/api/v2/job-processes")
  */
 class JobProcess extends AbstractController {
 
@@ -27,7 +30,7 @@ class JobProcess extends AbstractController {
     ];
 
     /**
-     * @Route("/api/v2/job-processes", name="job_processes")
+     * @Route("/", methods={"GET"})
      *
      * @param JobProcessRepository $job_process
      *  The job process repository service. The service return a query builder
@@ -42,7 +45,7 @@ class JobProcess extends AbstractController {
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function index(JobProcessRepository $job_process, Request $request, TaliazOldProcessor $processor) {
+    public function getAll(JobProcessRepository $job_process, Request $request, TaliazOldProcessor $processor) {
         $page = (int) $request->get('page', 1);
         $limit = 10;
         $posts = $job_process->getMaxJobProcesses($limit);
@@ -51,7 +54,7 @@ class JobProcess extends AbstractController {
         $pages = ceil($total / $limit);
 
         if (1 != $page && $page > $pages) {
-            return $this->createNotFoundException();
+            return $this->error('The request page is not in the correct range');
         }
 
         $processor->setMapper($this->mapper)->processRecords($posts);
@@ -68,5 +71,58 @@ class JobProcess extends AbstractController {
             'current' => $page,
             'limit' => $limit,
         ]);
+    }
+
+    /**
+     * @Route("/{id}", methods={"GET"})
+     *
+     * @param int $id
+     *  The ID of the job process.
+     * @param TaliazOldProcessor $processor
+     *  The old processor service.
+     *
+     * @return JsonResponse
+     */
+    public function getSingle(int $id, TaliazOldProcessor $processor) {
+        $job = $this
+            ->getDoctrine()
+            ->getRepository(\App\Entity\JobProcess::class)
+            ->find($id);
+
+        $processor->setMapper($this->mapper)->processRecord($job);
+        return new JsonResponse($job);
+    }
+
+    /**
+     * @Route("/{id}", methods={"PUT", "PATCH"})
+     *
+     * @param int $id
+     *  The ID of the job process.
+     */
+    public function update(int $id) {
+        $job = $this
+            ->getDoctrine()
+            ->getRepository(\App\Entity\JobProcess::class)
+            ->find($id);
+
+        if (!$job) {
+            return $this->error('The is no job process with ' . $id);
+        }
+
+        return new JsonResponse('a');
+    }
+
+    /**
+     * Return a JSON error response.
+     *
+     * @param $error
+     *  The error.
+     * @param int $code
+     *  The response code. Default to 404.
+     *
+     * @return JsonResponse
+     */
+    protected function error($error, $code = Response::HTTP_NOT_FOUND) {
+        return $this->json(['error' => $error], $code);
     }
 }
