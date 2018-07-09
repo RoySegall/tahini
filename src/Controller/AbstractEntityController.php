@@ -3,14 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\AbstractEntity;
-use App\Repository\JobProcessRepository;
-use App\Services\TaliazOldProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 abstract class AbstractEntityController extends AbstractController {

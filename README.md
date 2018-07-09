@@ -30,3 +30,9 @@ bin/console doctrine:schema:update --force
 ```bash
 bin/console server:run
 ```
+
+## Tests
+Of course we are using tests. In order to execute the tests just use
+```bash
+php bin/phpunit
+```
