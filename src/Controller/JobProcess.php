@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AbstractEntity;
 use App\Repository\JobProcessRepository;
 use App\Services\TaliazOldProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -103,10 +104,15 @@ class JobProcess extends AbstractController {
      *  The ID of the job process.
      * @param Request $request
      *  The request service.
+     * @param ValidatorInterface $validator
+     *  The validator service.
+     * @param TaliazOldProcessor $processor
+     *  The processor service.
      *
      * @return JsonResponse
      */
     public function update(int $id, Request $request, ValidatorInterface $validator, TaliazOldProcessor $processor) {
+        /** @var \App\Entity\JobProcess $job */
         $job = $this
             ->getDoctrine()
             ->getRepository(\App\Entity\JobProcess::class)
@@ -116,37 +122,71 @@ class JobProcess extends AbstractController {
             return $this->error('The is no job process with ' . $id);
         }
 
-        if (!$new_data = $this->processPayload($request)) {
-            return $this->error('The post is empty', Response::HTTP_BAD_REQUEST);
-        }
-
         // Change the values.
-        $flipped = array_flip($this->mapper);
-
-        foreach ($new_data as $key => $value) {
-            $job->{$flipped[$key]} = $value;
+        if ($error = $this->payloadToEntity($job, $request)) {
+            return $error;
         }
 
+        // Checking if there's no errors.
         if ($errors = $this->validate($job, $validator)) {
             return $errors;
         }
 
+        // Updating job.
+        $this->updateEntity($job);
+
+        // Convert the new object to the old preview.
         $processor->setMapper($this->mapper)->processRecord($job);
 
         return new JsonResponse($job);
     }
 
     /**
-     * Validating the entity.
+     * Convert the payload to object.
      *
-     * todo: move to service.
-     *
-     * @param $entity
-     * @param ValidatorInterface $validator
+     * @param AbstractEntity $entity
+     *  The entity object.
+     * @param Request $request
+     *  The request object.
      *
      * @return JsonResponse
      */
-    protected function validate($entity, ValidatorInterface $validator) {
+    protected function payloadToEntity(AbstractEntity $entity, Request $request) {
+
+        if (!$new_data = $this->processPayload($request)) {
+            return $this->error('The post is empty', Response::HTTP_BAD_REQUEST);
+        }
+
+        $flipped = array_flip($this->mapper);
+
+        foreach ($new_data as $key => $value) {
+            $entity->{$flipped[$key]} = $value;
+        }
+    }
+
+    /**
+     * Update the entity.
+     *
+     * @param AbstractEntity $entity
+     *  The entity object.
+     */
+    protected function updateEntity(AbstractEntity $entity) {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($entity);
+        $entityManager->flush();
+    }
+
+    /**
+     * Validating the entity.
+     *
+     * @param AbstractEntity $entity
+     *  The entity object.
+     * @param ValidatorInterface $validator
+     *  The validator service.
+     *
+     * @return JsonResponse
+     */
+    protected function validate(AbstractEntity $entity, ValidatorInterface $validator) {
         $errors = $validator->validate($entity);
 
         $error_list = [];
@@ -189,4 +229,5 @@ class JobProcess extends AbstractController {
     protected function error($error, $code = Response::HTTP_NOT_FOUND) {
         return $this->json(['error' => $error], $code);
     }
+
 }

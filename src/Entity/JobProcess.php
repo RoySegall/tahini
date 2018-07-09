@@ -1,5 +1,4 @@
 <?php
-// api/src/Entity/Book.php
 
 namespace App\Entity;
 
@@ -13,10 +12,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource
  * @ORM\Entity
  */
-class JobProcess {
+class JobProcess extends AbstractEntity {
 
     /**
-     * @var int The id of this book.
+     * @var int The id of this job process.
      *
      * @ORM\Id
      * @ORM\GeneratedValue
