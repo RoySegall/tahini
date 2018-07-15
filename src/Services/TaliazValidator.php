@@ -20,6 +20,12 @@ class TaliazValidator {
    */
   protected $validator;
 
+    /**
+     * TaliazValidator constructor.
+     *
+     * @param ValidatorInterface $validator
+     *  The validator service.
+     */
   public function __construct(ValidatorInterface $validator) {
     $this->validator = $validator;
   }

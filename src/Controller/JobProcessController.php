@@ -69,7 +69,7 @@ class JobProcessController extends AbstractEntityController {
   public function getSingle(int $id, TaliazOldProcessor $processor) {
     $job_entity = new \App\Entity\JobProcess();
 
-    $job = $this->getDoctrine()->getRepository($job_entity)->find($id);
+    $job = $this->getDoctrine()->getRepository(JobProcess::class)->find($id);
 
     $processor->setMapper($job_entity->getMapper())->processRecord($job);
     return new JsonResponse($job);

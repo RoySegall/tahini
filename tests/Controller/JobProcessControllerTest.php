@@ -14,8 +14,6 @@ class JobProcessControllerTest extends TaliazBaseWebTestCase {
 
   /**
    * Testing the job process crud operations.
-   *
-   * @todo: check the update functionality.
    */
   public function testHomeController() {
     $job_entry = $this->createJob();
@@ -38,6 +36,71 @@ class JobProcessControllerTest extends TaliazBaseWebTestCase {
     foreach ($content['data'][$job_entry->id] as $key => $value) {
       $this->assertEquals($value, $cloned_entry->{$key});
     }
+
+    // Check the single entry.
+    $client = static::createClient();
+    $client->request('GET', 'api/v2/job-processes/' . $job_entry->id);
+    $response = $client->getResponse();
+    $content = json_decode($response->getContent(), true);
+    $this->assertEquals($response->getStatusCode(), 200);
+
+    // Testing the single entry.
+    foreach ($content as $key => $value) {
+      $this->assertEquals($value, $cloned_entry->{$key});
+    }
+
+    // Testing the update of the entry.
+    $client = static::createClient();
+    $client->request(
+      'PATCH',
+      'api/v2/job-processes/' . $job_entry->id,
+      array(),
+      array(),
+      array('CONTENT_TYPE' => 'application/json'));
+
+    $results = json_decode($client->getResponse()->getContent(), true);
+    $this->assertEquals($results, ['error' => 'The post is empty']);
+
+    $client = static::createClient();
+    $client->request(
+      'PATCH',
+      'api/v2/job-processes/' . $job_entry->id,
+      array(),
+      array(),
+      array('CONTENT_TYPE' => 'application/json'),
+      '{"model_beagle": 52}');
+
+    $results = json_decode($client->getResponse()->getContent(), true);
+
+    $this->assertEquals($results, [
+      'error' => [
+        'message' => 'There are some errors in your request',
+        'errors' => [
+          'model_beagle' =>  [
+            0 => "The allowed values are '0' or '1'"
+          ],
+        ],
+      ],
+    ]);
+
+    $client = static::createClient();
+    $client->request(
+      'PATCH',
+      'api/v2/job-processes/' . $job_entry->id,
+      array(),
+      array(),
+      array('CONTENT_TYPE' => 'application/json'),
+      '{"model_beagle": "0"}');
+
+    /** @var JobProcess $new_job_entry */
+    $new_job_entry = $this
+      ->getDoctrine()
+      ->getManager()
+      ->getRepository(JobProcess::class)
+      ->find($job_entry->id);
+
+    $this->assertEquals($new_job_entry->model_beagle, 0);
+    $this->assertEquals($job_entry->modelBeagle, 1);
   }
 
   /**
