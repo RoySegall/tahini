@@ -13,17 +13,20 @@ composer install
 In the `.env` file add the DB settings:
 
 ```
-DATABASE_URL=mysql://root:root@localhost:3306/tahini
+DEFAULT_DATABASE_URL=mysql://root:root@localhost:3306/tahini
+PERSONAL_DATABASE_URL=mysql://root:root@localhost:3306/tahini_personal
 ```
 
 After you got the DB settings up and running
 ```bash
 bin/console doctrine:database:create
+bin/console doctrine:database:create --connection=personal
 ```
 
 When you have changes in the entity you can do
 ```bash
 bin/console doctrine:schema:update --force
+bin/console doctrine:schema:update --connection=personal --force
 ```
 
 ## Running the web server in development

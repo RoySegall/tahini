@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\JobProcess;
+use App\Entity\Main\JobProcess;
 use App\Tests\TaliazBaseWebTestCase;
 
 /**
