@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\JobProcess;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -14,7 +15,7 @@ class JobProcessRepository extends ServiceEntityRepository {
      * {@inheritdoc}
      */
     public function __construct(RegistryInterface $registry) {
-        parent::__construct($registry, \App\Entity\Main\JobProcess::class);
+        parent::__construct($registry, JobProcess::class);
     }
 
     /**

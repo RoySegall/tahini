@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Main\JobProcess;
+use App\Entity\JobProcess;
 use App\Repository\JobProcessRepository;
 use App\Services\TaliazOldProcessor;
 use App\Services\TaliazValidator;
@@ -67,7 +67,7 @@ class JobProcessController extends AbstractEntityController {
    * @return JsonResponse
    */
   public function getSingle(int $id, TaliazOldProcessor $processor) {
-    $job_entity = new \App\Entity\Main\JobProcess();
+    $job_entity = new \App\Entity\JobProcess();
 
     $job = $this->getDoctrine()->getRepository(JobProcess::class)->find($id);
 
@@ -90,8 +90,8 @@ class JobProcessController extends AbstractEntityController {
    * @return JsonResponse
    */
   public function update(int $id, Request $request, TaliazValidator $taliaz_validator, TaliazOldProcessor $processor) {
-    /** @var \App\Entity\Main\JobProcess $job */
-    $job = $this->getDoctrine()->getRepository(\App\Entity\Main\JobProcess::class)->find($id);
+    /** @var \App\Entity\JobProcess $job */
+    $job = $this->getDoctrine()->getRepository(\App\Entity\JobProcess::class)->find($id);
 
     if (!$job) {
       return $this->error('The is no job process with ' . $id);

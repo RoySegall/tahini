@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Entity\Main;
+namespace App\Entity;
 
-use App\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Validator\Constraints as Assert;
