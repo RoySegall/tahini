@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Controller with the basic information about the system.
  */
-class DefaultController extends AbstractController {
+class HomeController extends AbstractController {
 
   public const VERSION = '2.1';
 
