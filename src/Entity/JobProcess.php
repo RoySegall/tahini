@@ -15,6 +15,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class JobProcess extends AbstractEntity {
 
   /**
+   * @var array
+   */
+  protected $mapper = ['userId' => 'user_id', 'labFile' => 'lab_file', 'questionnaireId' => 'questionnaire_id', 'talResults' => 'tal_results', 'modelRuntime' => 'model_runtime', 'errorMessage' => 'error_message', 'modelBeagle' => 'model_beagle',];
+
+  /**
    * @var int The id of this job process.
    *
    * @ORM\Id
@@ -27,6 +32,7 @@ class JobProcess extends AbstractEntity {
    * @var int The user which own the test.
    *
    * @ORM\Column(type="integer", options={"unsigned":true})
+   * @Assert\NotNull()
    */
   public $userId;
 
@@ -41,6 +47,7 @@ class JobProcess extends AbstractEntity {
    * @var int The questionnaire ID.
    *
    * @ORM\Column(type="integer", options={"unsigned":true})
+   * @Assert\NotNull()
    */
   public $questionnaireId;
 
@@ -84,6 +91,7 @@ class JobProcess extends AbstractEntity {
    *
    * @ORM\Column(type="string", length=1)
    *
+   * @Assert\NotNull()
    * @Assert\Choice(
    *     choices = {"0", "1"},
    *     message = "The allowed values are '0' or '1'"

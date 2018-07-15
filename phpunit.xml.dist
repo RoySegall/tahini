@@ -15,6 +15,7 @@
         <env name="APP_SECRET" value="s$cretf0rt3st" />
         <env name="SHELL_VERBOSITY" value="-1" />
         <env name="CORS_ALLOW_ORIGIN" value="*" />
+        <env name="DATABASE_URL" value="mysql://root:root@localhost:3306/tahini" />
         <!-- define your env variables for the test env here -->
     </php>
 

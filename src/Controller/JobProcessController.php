@@ -2,24 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\JobProcess;
 use App\Repository\JobProcessRepository;
 use App\Services\TaliazOldProcessor;
+use App\Services\TaliazValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Get the job processes in the system.
  *
  * @Route("/api/v2/job-processes")
  */
-class JobProcess extends AbstractEntityController {
-
-  /**
-   * @var array
-   */
-  protected $mapper = ['userId' => 'user_id', 'labFile' => 'lab_file', 'questionnaireId' => 'questionnaire_id', 'talResults' => 'tal_results', 'modelRuntime' => 'model_runtime', 'errorMessage' => 'error_message', 'modelBeagle' => 'model_beagle',];
+class JobProcessController extends AbstractEntityController {
 
   /**
    * @Route("/", methods={"GET"})
@@ -49,7 +46,8 @@ class JobProcess extends AbstractEntityController {
       return $this->error('The request page is not in the correct range');
     }
 
-    $processor->setMapper($this->mapper)->processRecords($posts);
+    $job_entity = new JobProcess();
+    $processor->setMapper($job_entity->getMapper())->processRecords($posts);
 
     $data = [];
     foreach ($posts as $post) {
@@ -66,13 +64,14 @@ class JobProcess extends AbstractEntityController {
    *  The ID of the job process.
    * @param TaliazOldProcessor $processor
    *  The old processor service.
-   *
    * @return JsonResponse
    */
   public function getSingle(int $id, TaliazOldProcessor $processor) {
-    $job = $this->getDoctrine()->getRepository(\App\Entity\JobProcess::class)->find($id);
+    $job_entity = new \App\Entity\JobProcess();
 
-    $processor->setMapper($this->mapper)->processRecord($job);
+    $job = $this->getDoctrine()->getRepository($job_entity)->find($id);
+
+    $processor->setMapper($job_entity->getMapper())->processRecord($job);
     return new JsonResponse($job);
   }
 
@@ -83,14 +82,14 @@ class JobProcess extends AbstractEntityController {
    *  The ID of the job process.
    * @param Request $request
    *  The request service.
-   * @param ValidatorInterface $validator
+   * @param \App\Services\TaliazValidator $taliaz_validator
    *  The validator service.
    * @param TaliazOldProcessor $processor
    *  The processor service.
    *
    * @return JsonResponse
    */
-  public function update(int $id, Request $request, ValidatorInterface $validator, TaliazOldProcessor $processor) {
+  public function update(int $id, Request $request, TaliazValidator $taliaz_validator, TaliazOldProcessor $processor) {
     /** @var \App\Entity\JobProcess $job */
     $job = $this->getDoctrine()->getRepository(\App\Entity\JobProcess::class)->find($id);
 
@@ -104,15 +103,15 @@ class JobProcess extends AbstractEntityController {
     }
 
     // Checking if there's no errors.
-    if ($errors = $this->validate($job, $validator)) {
-      return $errors;
+    if ($errors = $taliaz_validator->validate($job)) {
+      return $this->error(['message' => 'There are some errors in your request', 'errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
 
     // Updating job.
     $this->updateEntity($job);
 
     // Convert the new object to the old preview.
-    $processor->setMapper($this->mapper)->processRecord($job);
+    $processor->setMapper($job->getMapper())->processRecord($job);
 
     return new JsonResponse($job);
   }

@@ -48,30 +48,6 @@ abstract class AbstractEntityController extends AbstractController {
   }
 
   /**
-   * Validating the entity.
-   *
-   * @param AbstractEntity $entity
-   *  The entity object.
-   * @param ValidatorInterface $validator
-   *  The validator service.
-   *
-   * @return JsonResponse
-   */
-  protected function validate(AbstractEntity $entity, ValidatorInterface $validator) {
-    $errors = $validator->validate($entity);
-
-    $error_list = [];
-    foreach ($errors as $property => $error) {
-      $human_property = $this->mapper[$error->getPropertyPath()];
-      $error_list[$human_property][] = $error->getMessage();
-    }
-
-    if ($error_list) {
-      return $this->error(['message' => 'There are some errors in your request', 'errors' => $error_list], Response::HTTP_BAD_REQUEST);
-    }
-  }
-
-  /**
    * Processing the payload.
    *
    * @return \Doctrine\Common\Collections\ArrayCollection
