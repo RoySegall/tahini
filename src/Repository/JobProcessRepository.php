@@ -15,7 +15,8 @@ class JobProcessRepository extends ServiceEntityRepository {
      * {@inheritdoc}
      */
     public function __construct(RegistryInterface $registry) {
-        parent::__construct($registry, JobProcess::class);
+      $registry->resetManager('default');
+      parent::__construct($registry, \App\Entity\Main\JobProcess::class);
     }
 
     /**

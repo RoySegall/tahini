@@ -24,6 +24,7 @@ bin/console doctrine:database:create
 When you have changes in the entity you can do
 ```bash
 bin/console doctrine:schema:update --force
+bin/console doctrine:schema:update --em=personal --force
 ```
 
 ## Running the web server in development

@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Services\TaliazDoctrine;
 use App\Services\TaliazOldProcessor;
 use App\Services\TaliazValidator;
 use Psr\Container\ContainerInterface;
@@ -56,6 +57,15 @@ class TaliazBaseWebTestCase extends WebTestCase {
    */
   protected function getTaliazValidator(): TaliazValidator {
     return $this->getContainer()->get('App\Services\TaliazValidator');
+  }
+
+  /**
+   * Get the doctrine service.
+   *
+   * @return TaliazDoctrine
+   */
+  protected function getTaliazDoctrine() : TaliazDoctrine {
+    return $this->getContainer()->get('App\Services\TaliazDoctrine');
   }
 
 }

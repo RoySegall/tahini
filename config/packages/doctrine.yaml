@@ -7,23 +7,38 @@ parameters:
 
 doctrine:
     dbal:
-        # configure these for your database server
-        driver: 'pdo_mysql'
-        server_version: '5.7'
-        charset: utf8mb4
-        default_table_options:
-            charset: utf8mb4
-            collate: utf8mb4_unicode_ci
+        default_connection: default
+        connections:
+            default:
+                driver:   pdo_mysql
+                url: '%env(resolve:DEFAULT_DATABASE_URL)%'
+                charset:  UTF8
+            personal:
+                driver:   pdo_mysql
+                url: '%env(resolve:PERSONAL_DATABASE_URL)%'
+                charset:  UTF8
 
-        url: '%env(resolve:DATABASE_URL)%'
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
-        mappings:
-            App:
-                is_bundle: false
-                type: annotation
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
-                alias: App
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                mappings:
+                    Main:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Main'
+                        prefix: 'App\Entity\Main'
+                        alias: Main
+            personal:
+                connection: personal
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                mappings:
+                    Personal:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Personal'
+                        prefix: 'App\Entity\Personal'
+                        alias: Personal

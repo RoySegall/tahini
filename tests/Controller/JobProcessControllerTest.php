@@ -94,9 +94,8 @@ class JobProcessControllerTest extends TaliazBaseWebTestCase {
 
     /** @var JobProcess $new_job_entry */
     $new_job_entry = $this
-      ->getDoctrine()
-      ->getManager()
-      ->getRepository(JobProcess::class)
+      ->getTaliazDoctrine()
+      ->getJobProcessRepository()
       ->find($job_entry->id);
 
     $this->assertEquals($new_job_entry->model_beagle, 0);

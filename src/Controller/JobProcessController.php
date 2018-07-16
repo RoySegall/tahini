@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\JobProcess;
+use App\Entity\Main\JobProcess;
 use App\Repository\JobProcessRepository;
+use App\Services\TaliazDoctrine;
 use App\Services\TaliazOldProcessor;
 use App\Services\TaliazValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,9 +34,10 @@ class JobProcessController extends AbstractEntityController {
    *  Return the list of job process with metadata.
    *
    * @throws \Doctrine\ORM\NonUniqueResultException
+   * @throws \Doctrine\ORM\ORMException
    */
   public function getAll(JobProcessRepository $job_process, Request $request, TaliazOldProcessor $processor) {
-    $page = (int)$request->get('page', 1);
+    $page = (int) $request->get('page', 1);
     $limit = 10;
     $posts = $job_process->getMaxJobProcesses($limit);
     $total = $job_process->getTotalRows();
@@ -64,12 +66,14 @@ class JobProcessController extends AbstractEntityController {
    *  The ID of the job process.
    * @param TaliazOldProcessor $processor
    *  The old processor service.
+   * @param TaliazDoctrine $taliaz_doctrine
+   *  The taliaz doctrine service.
    * @return JsonResponse
    */
-  public function getSingle(int $id, TaliazOldProcessor $processor) {
-    $job_entity = new \App\Entity\JobProcess();
+  public function getSingle(int $id, TaliazOldProcessor $processor, TaliazDoctrine $taliaz_doctrine) {
+    $job_entity = new \App\Entity\Main\JobProcess();
 
-    $job = $this->getDoctrine()->getRepository(JobProcess::class)->find($id);
+    $job = $taliaz_doctrine->getJobProcessRepository()->find($id);
 
     $processor->setMapper($job_entity->getMapper())->processRecord($job);
     return new JsonResponse($job);
@@ -86,12 +90,14 @@ class JobProcessController extends AbstractEntityController {
    *  The validator service.
    * @param TaliazOldProcessor $processor
    *  The processor service.
+   * @param TaliazDoctrine $taliaz_doctrine
+   *  The taliaz doctrine service.
    *
    * @return JsonResponse
    */
-  public function update(int $id, Request $request, TaliazValidator $taliaz_validator, TaliazOldProcessor $processor) {
-    /** @var \App\Entity\JobProcess $job */
-    $job = $this->getDoctrine()->getRepository(\App\Entity\JobProcess::class)->find($id);
+  public function update(int $id, Request $request, TaliazValidator $taliaz_validator, TaliazOldProcessor $processor, TaliazDoctrine $taliaz_doctrine) {
+    /** @var \App\Entity\Main\JobProcess $job */
+    $job = $taliaz_doctrine->getJobProcessRepository()->find($id);
 
     if (!$job) {
       return $this->error('The is no job process with ' . $id);
