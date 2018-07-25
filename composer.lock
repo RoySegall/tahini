@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "41fbbf3787de6ee60b8d6af0eb5d749d",
+    "content-hash": "d863ee5d9178fc07e3aae065bc8295ee",
     "packages": [
         {
             "name": "api-platform/api-pack",
@@ -2341,7 +2341,7 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v4.1.1",
+            "version": "v4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",

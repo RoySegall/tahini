@@ -116,3 +116,231 @@ Of course we are using tests. In order to execute the tests just use
 ```bash
 php bin/phpunit
 ```
+
+## Plugins
+
+Plugins are small peaces of code which combine together big logic. For example,
+if we need to send info from the system we can do this in two ways - sendgrid,
+custom SMTP server or sms. If we would have a class for that our class will be 
+big and un-easy to maintain. In addition, if we want to add more functionality,
+like a push notification, the class will grow in huge sizes.
+
+Instead of that, we can split our logic to small files and with a plugin manager
+we can negotiate between the plugins and use the most matching plugin.
+
+### Defining a plugin's annotation.
+First, we need to set up an annotation. Annotation is a stylish way to describe 
+the plugin. It's based on doctrine annotation mechanism. The annotation will be
+place in `src/Plugins/Annotations`. Let's take for example the Authentication 
+annotation:
+```php
+<?php
+
+namespace App\Plugins\Annotations;
+
+use Doctrine\Common\Annotations\Annotation;
+
+/**
+ * @Annotation
+ * @Target("CLASS")
+ */
+class Authentication {
+
+  public $id;
+
+  public $name;
+
+}
+```
+
+### Defining a plugin manager
+Now, that we have an annotation, let's set a plugin manager that will handle for
+us all the managing of the plugins. A plugin manager will be set in the 
+`src/Plugins` library. The plugin manager need to define three elements:
+
+* The namespace of the plugin annotation
+
+* The namespace of the plugins
+
+* The negotiation will give the instance of the best matching plugin for the 
+task.
+
+Let's have a look on the authentication plugin:
+
+```php
+<?php
+
+namespace App\Plugins;
+use App\Plugins\Authentication\AuthenticationPluginBase;
+
+/**
+ * {@inheritdoc}
+ */
+class Authentication extends PluginManagerBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNamespace() : string {
+    return 'App\Plugins\Authentication';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAnnotationHandler() : string {
+    return 'App\Plugins\Annotations\Authentication';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function negotiate() : PluginBase {
+    $plugins = array_keys($this->getPlugins());
+
+    foreach ($plugins as $id) {
+      /** @var AuthenticationPluginBase $plugin */
+      $plugin = $this->getPlugin($id);
+
+      if ($plugin->validateUser()) {
+        return $plugin;
+      }
+    }
+  }
+
+}
+```
+
+You can see that the method `getNamespace` return the namespace of the where all
+the plugins sits.
+
+The method `getAnnotationHandler` returns the reference for the annotation we 
+just created in the previous step.
+
+The method `negotiate` get all the plugins and check what's the best plugin we
+can use for our task. In this case, the first plugin that returned something
+is the best one for the task and we will get an instance of the plugin.
+
+### Writing a plugin
+Now, that we set all the basic for the plugins, let's set up a plugin. Since we
+define the namespace of the plugins in `App\Plugins\Authentication` our plugin
+will be in `src/Plugins/Authentication`. Let's have a look on two plugins to see
+how the plugins need to be define.
+
+`AccessToken.php`:
+
+```php
+<?php
+
+namespace App\Plugins\Authentication;
+
+use App\Plugins\Annotations\Authentication;
+
+/**
+ * @Authentication(
+ *   id = "access_token",
+ *   name = "Access Token",
+ * )
+ */
+class AccessToken extends AuthenticationPluginBase {
+
+  /**
+   * Making sure the user is valid.
+   */
+  function validateUser() {
+    return true;
+  }
+
+}
+```
+
+`Cookie.php`:
+```php
+<?php
+
+namespace App\Plugins\Authentication;
+
+use App\Plugins\Annotations\Authentication;
+
+/**
+ * @Authentication(
+ *   id = "cookie",
+ *   name = "Cookie",
+ * )
+ */
+class Cookie extends AuthenticationPluginBase {
+
+  /**
+   * Making sure the user is valid.
+   */
+  function validateUser() {
+  }
+
+}
+```
+
+So, what we got exactly? Each class got an annotation:
+```
+// Cookie.php:
+/**
+ * @Authentication(
+ *   id = "cookie",
+ *   name = "Cookie",
+ * )
+ */
+
+// AccessToken.php:
+/**
+ * @Authentication(
+ *   id = "access_token",
+ *   name = "Access Token",
+ * )
+ */
+``` 
+
+Every annotation starts with `@Authentication`, the `Authentication` is the name 
+of the annotation class. After that we have braces and inside that we have 
+properties. We can use only properties we defined in the annotation 
+class(remember the first section?).
+
+That's it.
+
+### More methods
+
+We have extra methods from the plugin manager we can use:
+
+* `getPlugins` - Get all the plugins available.
+
+* `getPlugin` - Get a single plugin. Just pass the ID of the plugin.
+
+* `convertNamespaceToPath` - Convert a namespace to a path in the system. Not 
+very useful outside the plugin manager but might be useful sometime. 
+
+### One more thing
+
+Since the plugins and the plugin manager defined inside the src directory, 
+they are in fact a service. You can pass them as dependency injection, or get 
+them from the container in tests:
+    
+```php
+<?php
+
+namespace App\Tests\Controller;
+
+use App\Plugins\Authentication;
+use App\Tests\TaliazBaseWebTestCase;
+
+class SomeClassForTest extends TaliazBaseWebTestCase {
+
+  /**
+   * Get the authentication service.
+   *
+   * @return Authentication
+   *  The authentication service.
+   */
+  public function getAuthenticationService() : Authentication {
+    return $this->getContainer()->get('App\Plugins\Authentication');
+  }
+  
+}
+``` 
