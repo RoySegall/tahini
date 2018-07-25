@@ -107,12 +107,12 @@ class JobProcessControllerTest extends TaliazBaseWebTestCase {
    *
    * @return JobProcess
    */
-  protected function createJob() : JobProcess {
+  protected function createJob() : \App\Entity\Main\JobProcess {
     // Get the manager.
     $entity_manager = $this->getDoctrine()->getManager();
 
     // Create a job entry.
-    $job_entry = new JobProcess();
+    $job_entry = new \App\Entity\Main\JobProcess();
     $job_entry->status = 1;
     $job_entry->userId = 1;
     $job_entry->questionnaireId = 2;
