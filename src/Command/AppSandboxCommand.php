@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Personal\User;
 use App\Plugins\Authentication;
+use App\Services\TaliazAccessToken;
 use App\Services\TaliazUser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,10 +19,13 @@ class AppSandboxCommand extends Command
    */
   protected $taliazUser;
 
-  public function __construct(?string $name = null, TaliazUser $taliazUser) {
+  protected $accessToken;
+
+  public function __construct(?string $name = null, TaliazUser $taliazUser, TaliazAccessToken $accessToken) {
     parent::__construct($name);
 
     $this->taliazUser = $taliazUser;
+    $this->accessToken = $accessToken;
   }
 
   protected function configure() {
@@ -29,13 +33,15 @@ class AppSandboxCommand extends Command
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $user = new User();
-    $user->username = 'admin';
-    $user->setPassword('admin');
-    $user->email = 'roy@foo.aaacom';
-    $user->type = 'app';
-    $user->roles = [1];
-
-    $this->taliazUser->createUser($user);
+//    $user = new User();
+//    $user->username = 'admin';
+//    $user->setPassword('admin');
+//    $user->email = 'roy@foo.aaacom';
+//    $user->type = 'app';
+//    $user->roles = [1];
+//
+//    $this->taliazUser->createUser($user);
+    $user = $this->taliazUser->findUserByUsername('admin');
+    d($this->accessToken->hasAccessToken($user));
   }
 }
