@@ -71,6 +71,20 @@ class User extends AbstractEntity implements UserInterface {
   public $email;
 
   /**
+   * @var boolean When the record has created.
+   *
+   * @ORM\Column(type="datetime", nullable=true)
+   */
+  public $created;
+
+  /**
+   * @var boolean When the record has been updated.
+   *
+   * @ORM\Column(type="datetime", nullable=true)
+   */
+  public $updated;
+
+  /**
    * Setting the password for a user.
    *
    * @param string $password
