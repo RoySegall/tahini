@@ -2,62 +2,62 @@
 
 namespace App\Entity\Personal;
 
-use App\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinColumn as JoinColumn;
-use Doctrine\ORM\Mapping\OneToOne as OneToOne;
-use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
+use \App\Entity\Personal\User;
 
 /**
- * Access Token entity.
- *
- * @ApiResource
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\AccessTokenRepository")
  */
-class AccessToken extends AbstractEntity {
+class AccessToken {
 
   /**
-   * @var int The id of the user.
-   *
-   * @ORM\Id
-   * @ORM\GeneratedValue
-   * @ORM\Column(type="integer", options={"unsigned":true})
+   * @ORM\Id()
+   * @ORM\GeneratedValue()
+   * @ORM\Column(type="integer")
    */
   public $id;
 
   /**
-   * @var integer The user ID.
-   *
-   * @Assert\NotNull()
-   * @ORM\Column(type="integer", nullable=false)
-   * @OneToOne(targetEntity="App\Entity\Personal\User")
+   * @ORM\Column(type="string", length=255)
    */
-  public $user;
+  public $access_token;
 
   /**
-   * @var string The access token of the user.
-   *
-   * @Assert\NotNull()
-   * @ORM\Column(type="string", nullable=false)
+   * @ORM\Column(type="string", length=255)
    */
-  public $accessToken;
+  public $refresh_token;
 
   /**
-   * @var string The refresh token of the user.
-   *
-   * @Assert\NotNull()
-   * @ORM\Column(type="string", nullable=false)
-   */
-  public $refreshToken;
-
-  /**
-   * @var string The description.
-   *
-   * @Assert\NotNull()
-   * @ORM\Column(type="datetime", nullable=true)
+   * @ORM\Column(type="time")
    */
   public $expires;
+
+  /**
+   * @ORM\OneToOne(targetEntity="\App\Entity\Personal\User", cascade={"persist", "remove"})
+   * @ORM\JoinColumn(nullable=false)
+   */
+  protected $user;
+
+
+  /**
+   * Getting the user object.
+   *
+   * @return \App\Entity\Personal\User|null
+   */
+  public function getUser(): ?User {
+    return $this->user;
+  }
+
+  /**
+   * Setting the user object.
+   *
+   * @param \App\Entity\Personal\User $user
+   * @return AccessToken
+   */
+  public function setUser(User $user): self {
+    $this->user = $user;
+
+    return $this;
+  }
 
 }
