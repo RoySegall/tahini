@@ -47,7 +47,21 @@ class Login extends AbstractTaiazController {
       return $this->error("Username and password are in correct.");
     }
 
-    return $this->json($taliazAccessToken->getAccessToken($user));
+    $access_token = $taliazAccessToken->getAccessToken($user);
+
+    if ($user != $access_token->id) {
+      // It seems that we got an empty access token. This could be due to the
+      // face that the access token is no longer valid.
+      return $this->error('The access token is no longer valid. Please refresh the token');
+    }
+
+    // Yeah, we got an access token. Bring back to the user.
+    return $this->json([
+      'user_id' => $user->id,
+      'expired' => $access_token->expires,
+      'refresh_token' => $access_token->access_token,
+      'access_token' => $access_token->access_token,
+    ]);
   }
 
 }

@@ -68,22 +68,20 @@ class TaliazAccessToken {
   public function createAccessToken(\App\Entity\Personal\User $user) : AccessToken {
     $access_token = new AccessToken();
 
-//    $access_token->expires = time() + 86400;
-//    $access_token->refresh_token = $this->generateHash('refresh_token', $user);
-//    $access_token->access_token = $this->generateHash('access_token', $user);
-//    $access_token->user = $user->id;
-//
-//    $this->taliazValidator->validate($access_token);
-//
-    $this->doctrineManager->getRepository($access_token);
-//    $this->doctrineManager->flush();
+    $access_token->expires = time() + 86400;
+    $access_token->refresh_token = $this->generateHash('refresh_token', $user);
+    $access_token->access_token = $this->generateHash('access_token', $user);
+    $access_token->user = $user;
 
+    $this->taliazValidator->validate($access_token);
+    $this->doctrineManager->persist($access_token);
+    $this->doctrineManager->flush();
 
     return $access_token;
   }
 
   /**
-   * Getting an access token for a user.
+   * Getting an access token for a user. Creates it if not.
    *
    * @param User $user
    *  The user object.
@@ -92,9 +90,14 @@ class TaliazAccessToken {
    *  The access token object.
    */
   public function getAccessToken(\App\Entity\Personal\User $user) : AccessToken {
+    /** @var AccessToken $access_token */
     if (!$access_token = $this->hasAccessToken($user)) {
       // No access token for the user. Create an access token and return it.
       return $this->createAccessToken($user);
+    }
+
+    if ($access_token->expires < time()) {
+      return new AccessToken();
     }
 
     return $access_token;

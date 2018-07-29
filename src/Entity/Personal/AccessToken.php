@@ -41,7 +41,7 @@ class AccessToken extends AbstractEntity {
   public $expires;
 
   /**
-   * @ORM\OneToOne(targetEntity="App\Entity\Personal\User", cascade={"persist", "remove"})
+   * @ORM\OneToOne(targetEntity="\App\Entity\Personal\User", cascade={"persist", "remove"})
    * @ORM\JoinColumn(nullable=false)
    */
   public $user;
