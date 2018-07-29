@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource
  * @ORM\Entity
  */
-class AccessTokenTable extends AbstractEntity {
+class AccessToken extends AbstractEntity {
 
   /**
    * @ORM\Id()
