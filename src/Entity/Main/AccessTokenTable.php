@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource
  * @ORM\Entity
  */
-class AccessToken extends AbstractEntity {
+class AccessTokenTable extends AbstractEntity {
 
   /**
    * @ORM\Id()
@@ -41,6 +41,7 @@ class AccessToken extends AbstractEntity {
   public $expires;
 
   /**
+   * @ORM\Column(type="integer", length=255)
    * @ORM\JoinColumn(nullable=false)
    */
   public $user;

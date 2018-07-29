@@ -53,7 +53,7 @@ class TaliazDoctrine {
    * @return \Doctrine\Common\Persistence\ObjectRepository
    */
   public function getAccessTokenRepository() : \Doctrine\Common\Persistence\ObjectRepository {
-    return $this->doctrine->getRepository(\App\Entity\Main\AccessToken::class,'personal');
+    return $this->doctrine->getRepository(\App\Entity\Main\AccessTokenTable::class);
   }
 
 }

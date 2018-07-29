@@ -3,7 +3,8 @@
 namespace App\Services;
 
 use ApiPlatform\Core\Validator\Exception\ValidationException;
-use App\Entity\Main\AccessToken;
+use App\Entity\Main\AccessTokenTable;
+use App\Entity\Main\Foo;
 use App\Entity\Personal\User;
 use App\Repository\AccessTokenRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -66,17 +67,9 @@ class TaliazAccessToken {
    * @return AccessToken
    *  The access token object.
    */
-  public function createAccessToken(\App\Entity\Personal\User $user) : AccessToken {
-    $access_token = new AccessToken();
-    $access_token->access_token = $this->generateHash('access_token', $user);
-    $access_token->refresh_token = $this->generateHash('refresh_token', $user);
-    $access_token->user = $user;
-    $access_token->expires = time() + 84600;
-
+  public function createAccessToken(\App\Entity\Personal\User $user) : AccessTokenTable {
+    $access_token = new Foo();
     $this->taliazValidator->validate($access_token, true);
-
-    d($this->accessTokenRepository->getClassName());
-
     $this->doctrineManager->getRepository($access_token);
     $this->doctrineManager->flush();
     return $access_token;
@@ -91,7 +84,7 @@ class TaliazAccessToken {
    * @return AccessToken
    *  The access token object.
    */
-  public function getAccessToken(\App\Entity\Personal\User $user) : AccessToken {
+  public function getAccessToken(\App\Entity\Personal\User $user) : AccessTokenTable {
     if (!$access_token = $this->hasAccessToken($user)) {
       // No access token for the user. Create an access token and return it.
       return $this->createAccessToken($user);
