@@ -67,20 +67,6 @@ class JobProcess extends AbstractEntity {
   public $talResults;
 
   /**
-   * @var boolean When the record has created.
-   *
-   * @ORM\Column(type="datetime", nullable=true)
-   */
-  public $created;
-
-  /**
-   * @var boolean When the record has updated.
-   *
-   * @ORM\Column(type="datetime", nullable=true)
-   */
-  public $updated;
-
-  /**
    * @var boolean When the record has updated.
    *
    * @ORM\Column(type="bigint", length=15, nullable=true)

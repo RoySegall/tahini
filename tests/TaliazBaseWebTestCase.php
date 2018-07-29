@@ -2,8 +2,10 @@
 
 namespace App\Tests;
 
+use App\Plugins\Authentication;
 use App\Services\TaliazDoctrine;
 use App\Services\TaliazOldProcessor;
+use App\Services\TaliazUser;
 use App\Services\TaliazValidator;
 use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
@@ -66,6 +68,25 @@ class TaliazBaseWebTestCase extends WebTestCase {
    */
   protected function getTaliazDoctrine() : TaliazDoctrine {
     return $this->getContainer()->get('App\Services\TaliazDoctrine');
+  }
+
+  /**
+   * Get the authentication service.
+   *
+   * @return Authentication
+   *  The authentication service.
+   */
+  public function getAuthenticationService() : Authentication {
+    return $this->getContainer()->get('App\Plugins\Authentication');
+  }
+
+  /**
+   * Get the user service.
+   *
+   * @return TaliazUser
+   */
+  protected function getTaliazUser() : TaliazUser {
+    return $this->getContainer()->get('App\Services\TaliazUser');
   }
 
 }

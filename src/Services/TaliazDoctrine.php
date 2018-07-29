@@ -40,4 +40,13 @@ class TaliazDoctrine {
     return $this->doctrine->getRepository(\App\Entity\Main\JobProcess::class, 'default');
   }
 
+  /**
+   * Get the user repository object.
+   *
+   * @return \Doctrine\Common\Persistence\ObjectRepository
+   */
+  public function getUserRepository() : \Doctrine\Common\Persistence\ObjectRepository {
+    return $this->doctrine->getRepository(\App\Entity\Personal\User::class,'personal');
+  }
+
 }

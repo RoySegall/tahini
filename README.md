@@ -318,29 +318,32 @@ very useful outside the plugin manager but might be useful sometime.
 
 ### One more thing
 
-Since the plugins and the plugin manager defined inside the src directory, 
+* Since the plugins and the plugin manager defined inside the src directory, 
 they are in fact a service. You can pass them as dependency injection, or get 
 them from the container in tests:
     
-```php
-<?php
+    ```php
+    <?php
+    
+    namespace App\Tests\Controller;
+    
+    use App\Plugins\Authentication;
+    use App\Tests\TaliazBaseWebTestCase;
+    
+    class SomeClassForTest extends TaliazBaseWebTestCase {
+    
+      /**
+       * Get the authentication service.
+       *
+       * @return Authentication
+       *  The authentication service.
+       */
+      public function getAuthenticationService() : Authentication {
+        return $this->getContainer()->get('App\Plugins\Authentication');
+      }
+      
+    }
+    ``` 
 
-namespace App\Tests\Controller;
-
-use App\Plugins\Authentication;
-use App\Tests\TaliazBaseWebTestCase;
-
-class SomeClassForTest extends TaliazBaseWebTestCase {
-
-  /**
-   * Get the authentication service.
-   *
-   * @return Authentication
-   *  The authentication service.
-   */
-  public function getAuthenticationService() : Authentication {
-    return $this->getContainer()->get('App\Plugins\Authentication');
-  }
-  
-}
-``` 
+* When using an annotation your IDE might mark their namespace as un-used. Don't
+bother.
