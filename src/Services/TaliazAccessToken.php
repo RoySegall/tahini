@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use ApiPlatform\Core\Validator\Exception\ValidationException;
-use App\Entity\Personal\AccessToken;
+use App\Entity\Main\AccessToken;
 use App\Entity\Personal\User;
+use App\Repository\AccessTokenRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -30,15 +31,30 @@ class TaliazAccessToken {
   protected $doctrineManager;
 
   /**
+   * @var TaliazValidator
+   */
+  protected $taliazValidator;
+
+  /**
+   * @var AccessTokenRepository
+   */
+  protected $accessTokenRepository;
+
+  /**
    * TaliazAccessToken constructor.
    *
    * @param TaliazDoctrine $taliaz_doctrine
    *  The taliaz doctrine service.
    * @param ManagerRegistry $registry
+   *  The registry service.
+   * @param TaliazValidator $taliaz_validator
+   *  The validator service.
    */
-  public function __construct(TaliazDoctrine $taliaz_doctrine, ManagerRegistry $registry) {
+  public function __construct(TaliazDoctrine $taliaz_doctrine, ManagerRegistry $registry, TaliazValidator $taliaz_validator, AccessTokenRepository $accessTokenRepository) {
     $this->doctrine = $taliaz_doctrine;
     $this->doctrineManager = $registry->getManager('personal');
+    $this->taliazValidator = $taliaz_validator;
+    $this->accessTokenRepository = $accessTokenRepository;
   }
 
   /**
@@ -51,6 +67,19 @@ class TaliazAccessToken {
    *  The access token object.
    */
   public function createAccessToken(\App\Entity\Personal\User $user) : AccessToken {
+    $access_token = new AccessToken();
+    $access_token->access_token = $this->generateHash('access_token', $user);
+    $access_token->refresh_token = $this->generateHash('refresh_token', $user);
+    $access_token->user = $user;
+    $access_token->expires = time() + 84600;
+
+    $this->taliazValidator->validate($access_token, true);
+
+    d($this->accessTokenRepository->getClassName());
+
+    $this->doctrineManager->getRepository($access_token);
+    $this->doctrineManager->flush();
+    return $access_token;
   }
 
   /**
@@ -63,6 +92,12 @@ class TaliazAccessToken {
    *  The access token object.
    */
   public function getAccessToken(\App\Entity\Personal\User $user) : AccessToken {
+    if (!$access_token = $this->hasAccessToken($user)) {
+      // No access token for the user. Create an access token and return it.
+      return $this->createAccessToken($user);
+    }
+
+    return $access_token;
   }
 
   /**
@@ -73,8 +108,27 @@ class TaliazAccessToken {
    *
    * @return bool
    */
-  public function hasAccessToken(\App\Entity\Personal\User $user) : bool {
-    return true;
+  public function hasAccessToken(\App\Entity\Personal\User $user) {
+
+    if ($access_token = $this->doctrine->getAccessTokenRepository()->findBy(['user' => $user->id])) {
+      return reset($access_token);
+    }
+
+    return false;
+  }
+
+  /**
+   * Generate a hash from random properties of the user object.
+   *
+   * @param string $type
+   *  The type of the token - access token, refresh token.
+   * @param User $username
+   *  The user object.
+   *
+   * @return string
+   */
+  protected function generateHash(string $type, User $username) : string {
+    return password_hash($type . $username->id . $username->username . $username->email, PASSWORD_BCRYPT, ['cost' => 12]);
   }
 
 }

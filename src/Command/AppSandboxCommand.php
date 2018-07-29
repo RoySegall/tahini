@@ -42,6 +42,6 @@ class AppSandboxCommand extends Command
 //
 //    $this->taliazUser->createUser($user);
     $user = $this->taliazUser->findUserByUsername('admin');
-    d($this->accessToken->hasAccessToken($user));
+    d($this->accessToken->getAccessToken($user));
   }
 }

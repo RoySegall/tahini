@@ -5,6 +5,7 @@ namespace App\Controller\User;
 use App\Controller\AbstractTaiazController;
 use App\Entity\Main\JobProcess;
 use App\Repository\JobProcessRepository;
+use App\Services\TaliazAccessToken;
 use App\Services\TaliazDoctrine;
 use App\Services\TaliazOldProcessor;
 use App\Services\TaliazUser;
@@ -29,7 +30,7 @@ class Login extends AbstractTaiazController {
    *
    * @return
    */
-  public function loginController(Request $request, TaliazUser $taliaz_user) {
+  public function loginController(Request $request, TaliazUser $taliaz_user, TaliazAccessToken $taliazAccessToken) {
     $payload = $this->processPayload($request);
 
     if (!$auth = $payload->get('auth')) {
@@ -46,7 +47,7 @@ class Login extends AbstractTaiazController {
       return $this->error("Username and password are in correct.");
     }
 
-    return $this->json($user);
+    return $this->json($taliazAccessToken->getAccessToken($user));
   }
 
 }
