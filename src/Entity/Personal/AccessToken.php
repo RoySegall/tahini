@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Main;
+namespace App\Entity\Personal;
 
 use Doctrine\ORM\Mapping as ORM;
 use \Doctrine\ORM\Mapping\Table as Table;
@@ -36,12 +36,12 @@ class AccessToken extends AbstractEntity {
   public $refresh_token;
 
   /**
-   * @ORM\Column(type="time")
+   * @ORM\Column(type="integer")
    */
   public $expires;
 
   /**
-   * @ORM\Column(type="integer", length=255)
+   * @ORM\OneToOne(targetEntity="App\Entity\Personal\User", cascade={"persist", "remove"})
    * @ORM\JoinColumn(nullable=false)
    */
   public $user;

@@ -13,7 +13,8 @@ class AccessTokenRepository extends ServiceEntityRepository {
    * {@inheritdoc}
    */
   public function __construct(RegistryInterface $registry) {
-    parent::__construct($registry, \App\Entity\Main\AccessTokenTable::class);
+    $registry->resetManager('personal');
+    parent::__construct($registry, \App\Entity\Personal\AccessToken::class);
   }
 
 }

@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use ApiPlatform\Core\Validator\Exception\ValidationException;
-use App\Entity\Main\AccessTokenTable;
-use App\Entity\Main\Foo;
+use App\Entity\Personal\AccessToken;
 use App\Entity\Personal\User;
 use App\Repository\AccessTokenRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -67,11 +65,20 @@ class TaliazAccessToken {
    * @return AccessToken
    *  The access token object.
    */
-  public function createAccessToken(\App\Entity\Personal\User $user) : AccessTokenTable {
-    $access_token = new Foo();
-    $this->taliazValidator->validate($access_token, true);
+  public function createAccessToken(\App\Entity\Personal\User $user) : AccessToken {
+    $access_token = new AccessToken();
+
+//    $access_token->expires = time() + 86400;
+//    $access_token->refresh_token = $this->generateHash('refresh_token', $user);
+//    $access_token->access_token = $this->generateHash('access_token', $user);
+//    $access_token->user = $user->id;
+//
+//    $this->taliazValidator->validate($access_token);
+//
     $this->doctrineManager->getRepository($access_token);
-    $this->doctrineManager->flush();
+//    $this->doctrineManager->flush();
+
+
     return $access_token;
   }
 
@@ -84,7 +91,7 @@ class TaliazAccessToken {
    * @return AccessToken
    *  The access token object.
    */
-  public function getAccessToken(\App\Entity\Personal\User $user) : AccessTokenTable {
+  public function getAccessToken(\App\Entity\Personal\User $user) : AccessToken {
     if (!$access_token = $this->hasAccessToken($user)) {
       // No access token for the user. Create an access token and return it.
       return $this->createAccessToken($user);
@@ -115,13 +122,13 @@ class TaliazAccessToken {
    *
    * @param string $type
    *  The type of the token - access token, refresh token.
-   * @param User $username
+   * @param User $user
    *  The user object.
    *
    * @return string
    */
-  protected function generateHash(string $type, User $username) : string {
-    return password_hash($type . $username->id . $username->username . $username->email, PASSWORD_BCRYPT, ['cost' => 12]);
+  protected function generateHash(string $type, User $user) : string {
+    return password_hash($type . $user->id . $user->username . $user->email, PASSWORD_BCRYPT, ['cost' => 12]);
   }
 
 }

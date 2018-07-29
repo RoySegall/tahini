@@ -33,15 +33,7 @@ class AppSandboxCommand extends Command
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-//    $user = new User();
-//    $user->username = 'admin';
-//    $user->setPassword('admin');
-//    $user->email = 'roy@foo.aaacom';
-//    $user->type = 'app';
-//    $user->roles = [1];
-//
-//    $this->taliazUser->createUser($user);
     $user = $this->taliazUser->findUserByUsername('admin');
-    d($this->accessToken->getAccessToken($user));
+    $this->accessToken->getAccessToken($user);
   }
 }
