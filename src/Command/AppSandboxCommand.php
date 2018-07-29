@@ -30,11 +30,11 @@ class AppSandboxCommand extends Command
 
   protected function execute(InputInterface $input, OutputInterface $output) {
     $user = new User();
-    $user->username = 'adaamin';
+    $user->username = 'admin';
+    $user->setPassword('admin');
     $user->email = 'roy@foo.aaacom';
     $user->type = 'app';
     $user->roles = [1];
-    $user->setPassword('1234');
 
     $this->taliazUser->createUser($user);
   }
