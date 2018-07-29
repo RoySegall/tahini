@@ -38,7 +38,6 @@ class AccessToken {
    */
   protected $user;
 
-
   /**
    * Getting the user object.
    *
