@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use App\Plugins\Authentication;
 use App\Tests\TaliazBaseWebTestCase;
 
 class AuthenticationTest extends TaliazBaseWebTestCase {
@@ -26,15 +25,4 @@ class AuthenticationTest extends TaliazBaseWebTestCase {
     $this->assertEquals('App\Plugins\Authentication\AccessToken', get_class($this->getAuthenticationService()->negotiate()));
   }
 
-  /**
-   * Get the authentication service.
-   *
-   * @return Authentication
-   *  The authentication service.
-   */
-  public function getAuthenticationService() : Authentication {
-    return $this->getContainer()->get('App\Plugins\Authentication');
-  }
-
 }
-

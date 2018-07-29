@@ -2,7 +2,9 @@
 
 namespace App\Command;
 
+use App\Entity\Personal\User;
 use App\Plugins\Authentication;
+use App\Services\TaliazUser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,14 +14,14 @@ class AppSandboxCommand extends Command
   protected static $defaultName = 'app:sandbox';
 
   /**
-   * @var Authentication
+   * @var TaliazUser
    */
-  protected $authentication;
+  protected $taliazUser;
 
-  public function __construct(?string $name = null, Authentication $authentication) {
+  public function __construct(?string $name = null, TaliazUser $taliazUser) {
     parent::__construct($name);
 
-    $this->authentication = $authentication;
+    $this->taliazUser = $taliazUser;
   }
 
   protected function configure() {
@@ -27,7 +29,13 @@ class AppSandboxCommand extends Command
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $foo = $this->authentication->negotiate();
-    d($foo);
+    $user = new User();
+    $user->username = 'adaamin';
+    $user->email = 'roy@foo.aaacom';
+    $user->type = 'app';
+    $user->roles = [1];
+    $user->setPassword('1234');
+
+    $this->taliazUser->createUser($user);
   }
 }

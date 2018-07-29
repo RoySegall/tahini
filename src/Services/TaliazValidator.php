@@ -31,12 +31,17 @@ class TaliazValidator {
   }
 
   /**
-   * @param AbstractEntity $entity
+   * Validating the entity object by using the constraints service.
    *
-   * @return array
+   * @param AbstractEntity $entity
+   *  The entity object we need to validate.
+   * @param bool $return_exception
+   *  When the validation failed, you can get the the exception object and
+   *  handle it your self.
+   *
+   * @return array|ValidationException
    */
-  public function validate(AbstractEntity $entity) : array {
-
+  public function validate(AbstractEntity $entity, bool $return_exception = false) {
     $error_list = [];
 
     try {
@@ -46,8 +51,20 @@ class TaliazValidator {
         return [];
       }
     } catch (ValidationException $validationException) {
+
+      if ($return_exception) {
+        return $validationException;
+      }
+
+      $mappers = $entity->getMapper();
+
       foreach ($validationException->getConstraintViolationList() as $error) {
-        $human_property = $entity->getMapper()[$error->getPropertyPath()];
+        $human_property = $error->getPropertyPath();
+
+        if (!empty($mappers[$error->getPropertyPath()])) {
+          $human_property = $mappers[$error->getPropertyPath()];
+        }
+
         $error_list[$human_property][] = $error->getMessage();
       }
     }
