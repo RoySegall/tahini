@@ -18,12 +18,12 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Get the job processes in the system.
  *
- * @Route("/api/user/login")
+ * @Route("/api/user/")
  */
 class Login extends AbstractTaiazController {
 
   /**
-   * @Route("", methods={"POST"})
+   * @Route("login", methods={"POST"})
    *
    * @param Request $request
    *  The request service.
@@ -49,7 +49,7 @@ class Login extends AbstractTaiazController {
 
     $access_token = $taliazAccessToken->getAccessToken($user);
 
-    if ($user != $access_token->id) {
+    if (empty($access_token->access_token)) {
       // It seems that we got an empty access token. This could be due to the
       // face that the access token is no longer valid.
       return $this->error('The access token is no longer valid. Please refresh the token');
