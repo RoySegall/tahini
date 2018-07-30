@@ -7,8 +7,6 @@ use App\Entity\Personal\User;
 use App\Repository\AccessTokenRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Taliaz access token.
@@ -20,7 +18,15 @@ use Symfony\Component\Validator\ConstraintViolationList;
  */
 class TaliazAccessToken {
 
+  /**
+   * The name of the header which holds the access token.
+   */
   const ACCESS_TOKEN_HEADER_KEY = 'X-AUTH-TOKEN';
+
+  /**
+   * kep the amount of time the access should kept alive.
+   */
+  const ACCESS_TOKEN_DURATION = 86400;
 
   /**
    * @var TaliazDoctrine
@@ -71,7 +77,7 @@ class TaliazAccessToken {
   public function createAccessToken(\App\Entity\Personal\User $user) : AccessToken {
     $access_token = new AccessToken();
 
-    $access_token->expires = time() + 86400;
+    $access_token->expires = time() + self::ACCESS_TOKEN_DURATION;
     $access_token->refresh_token = $this->generateHash('refresh_token', $user);
     $access_token->access_token = $this->generateHash('access_token', $user);
     $access_token->user = $user;
@@ -210,6 +216,17 @@ class TaliazAccessToken {
     $access_token->access_token = NULL;
     $this->doctrineManager->persist($access_token);
     $this->doctrineManager->flush();
+  }
+
+  /**
+   * Return the duration, in seconds, which the access should kept alive.
+   *
+   * @todo move to a confiugrable place.
+   *
+   * @return integer
+   */
+  public function getAccessTokenExpires() {
+    return \App\Services\TaliazAccessToken::ACCESS_TOKEN_DURATION;
   }
 
   /**

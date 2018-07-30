@@ -3,7 +3,6 @@
 namespace App\Security;
 
 use App\Entity\Personal\AccessToken;
-use App\Entity\Personal\User;
 use App\Services\TaliazAccessToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,9 +54,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
   ];
 
   /**
-   * Called on every request to decide if this authenticator should be
-   * used for the request. Returning false will cause this authenticator
-   * to be skipped.
+   * {@inheritdoc}
    */
   public function supports(Request $request) {
     $path = $request->getRequestUri();
@@ -76,14 +73,17 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
   }
 
   /**
-   * Called on every request. Return whatever credentials you want to
-   * be passed to getUser() as $credentials.
+   * {@inheritdoc}
    */
   public function getCredentials(Request $request) {
     return array('token' => $request->headers->get(\App\Services\TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getUser($credentials, UserProviderInterface $userProvider) {
+    // todo: use the authentication plugin.
     $user = $this->TaliazAccessToken->loadByAccessToken($credentials['token'])->user;
 
     if (empty($user->id)) {
@@ -93,7 +93,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
     return $user;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function checkCredentials($credentials, UserInterface $user) {
+    // todo: use the authentication plugin.
     $this->token = $this->TaliazAccessToken->loadByAccessToken($credentials['token']);
 
     $user = $this->token->user;
@@ -106,11 +110,17 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
     return true;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey) {
     // on success, let the request continue
     return null;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
     $data = array('message' => strtr('You are not valid. Try again later.', $exception->getMessageData()));
 
@@ -118,7 +128,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
   }
 
   /**
-   * Called when authentication is needed, but it's not sent
+   * {@inheritdoc}
    */
   public function start(Request $request, AuthenticationException $authException = null) {
     $data = array(// you might translate this message
@@ -127,7 +137,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
     return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function supportsRememberMe() {
     return false;
   }
+
 }
