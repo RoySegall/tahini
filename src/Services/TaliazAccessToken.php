@@ -85,11 +85,13 @@ class TaliazAccessToken {
    *
    * @param User $user
    *  The user object.
+   * @param bool $unvalid_create_new
+   *  When the access toke is unvalid we can create a new one.
    *
    * @return AccessToken
    *  The access token object.
    */
-  public function getAccessToken(\App\Entity\Personal\User $user) : AccessToken {
+  public function getAccessToken(\App\Entity\Personal\User $user, bool $unvalid_create_new = false) : AccessToken {
     /** @var AccessToken $access_token */
     if (!$access_token = $this->hasAccessToken($user)) {
       // No access token for the user. Create an access token and return it.
@@ -97,6 +99,12 @@ class TaliazAccessToken {
     }
 
     if ($access_token->expires < time()) {
+
+      if ($unvalid_create_new) {
+        // Creating a new access token.
+        return $this->refreshAccessToken($access_token->refresh_token);
+      }
+
       return new AccessToken();
     }
 
