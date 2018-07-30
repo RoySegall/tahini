@@ -121,6 +121,45 @@ class TaliazAccessToken {
   }
 
   /**
+   * Refreshing access token.
+   *
+   * @param string $refresh_token
+   *  The refresh token string.
+   *
+   * @return AccessToken
+   */
+  public function refreshAccessToken(string $refresh_token) : AccessToken {
+
+    /** @var AccessToken[]|null $results */
+    if ($results = $this->doctrine->getAccessTokenRepository()->findBy(['refresh_token' => $refresh_token])) {
+      $access_token = reset($results);
+
+      // Keep track of the user.
+      $user = $access_token->user;
+      $access_token->user = NULL;
+
+      // Delete the old access token.
+      $this->doctrineManager->remove($access_token);
+      $this->doctrineManager->flush();
+
+      // Create a new refresh token.
+      $new_access_token = $this->createAccessToken($user);
+
+      return $new_access_token;
+    }
+
+    // Nothing we found. Now we got
+    return new AccessToken();
+  }
+
+  /**
+   * Get the user object by the access token.
+   */
+  public function findUserByAccessToken() : User {
+    return new User();
+  }
+
+  /**
    * Generate a hash from random properties of the user object.
    *
    * @param string $type
@@ -131,7 +170,7 @@ class TaliazAccessToken {
    * @return string
    */
   protected function generateHash(string $type, User $user) : string {
-    return password_hash($type . $user->id . $user->username . $user->email, PASSWORD_BCRYPT, ['cost' => 12]);
+    return password_hash($type . $user->id . $user->username . $user->email . time() . microtime(), PASSWORD_BCRYPT, ['cost' => 12]);
   }
 
 }

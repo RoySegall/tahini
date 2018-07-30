@@ -27,8 +27,12 @@ class Login extends AbstractTaiazController {
    *
    * @param Request $request
    *  The request service.
+   * @param TaliazUser $taliaz_user
+   *  The taliaz user service.
+   * @param TaliazAccessToken $taliazAccessToken
+   *  The taliaz access token service.
    *
-   * @return
+   * @return JsonResponse
    */
   public function loginController(Request $request, TaliazUser $taliaz_user, TaliazAccessToken $taliazAccessToken) {
     $payload = $this->processPayload($request);
@@ -58,9 +62,40 @@ class Login extends AbstractTaiazController {
     // Yeah, we got an access token. Bring back to the user.
     return $this->json([
       'user_id' => $user->id,
-      'expired' => $access_token->expires,
-      'refresh_token' => $access_token->access_token,
+      'expires' => $access_token->expires,
       'access_token' => $access_token->access_token,
+      'refresh_token' => $access_token->refresh_token,
+    ]);
+  }
+
+  /**
+   * @Route("refresh", methods={"POST"})
+   *
+   * @param Request $request
+   *  The request service.
+   * @param TaliazAccessToken $taliazAccessToken
+   *  The taliaz access token service.
+   *
+   * @return JsonResponse
+   */
+  public function refreshToken(Request $request, TaliazAccessToken $taliazAccessToken) {
+    $payload = $this->processPayload($request);
+
+    if (!$refresh_token = $payload->get('refresh_token')) {
+      return $this->error('The refresh token is missing', Response::HTTP_BAD_REQUEST);
+    }
+
+    $access_token = $taliazAccessToken->refreshAccessToken($refresh_token);
+
+    if (empty($access_token->id)) {
+      return $this->error('It seems that the given refresh token does not exists.');
+    }
+
+    return $this->json([
+      'user_id' => $access_token->user->id,
+      'expires' => $access_token->expires,
+      'access_token' => $access_token->access_token,
+      'refresh_token' => $access_token->refresh_token,
     ]);
   }
 
