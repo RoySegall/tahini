@@ -2,7 +2,9 @@
 
 namespace App\Tests;
 
+use App\Entity\Personal\User;
 use App\Plugins\Authentication;
+use App\Services\TaliazAccessToken;
 use App\Services\TaliazDoctrine;
 use App\Services\TaliazOldProcessor;
 use App\Services\TaliazUser;
@@ -23,6 +25,24 @@ class TaliazBaseWebTestCase extends WebTestCase {
 
     // Booting up the kernal.
     self::bootKernel();
+  }
+
+  /**
+   * Create a user.
+   *
+   * @return User
+   *  The user object.
+   *
+   * @throws \Exception
+   */
+  public function createUser() : User {
+    $user = new User();
+    $user->username = 'user' . time() . microtime();
+    $user->setPassword('text');
+    $user->roles = [1];
+    $user->type = 'app';
+    $user->email = 'dummy' . time() . microtime() . '@example.com';
+    return $this->getTaliazUser()->createUser($user);
   }
 
   /**
@@ -87,6 +107,15 @@ class TaliazBaseWebTestCase extends WebTestCase {
    */
   protected function getTaliazUser() : TaliazUser {
     return $this->getContainer()->get('App\Services\TaliazUser');
+  }
+
+  /**
+   * Get the access token service.
+   *
+   * @return TaliazAccessToken
+   */
+  public function getTaliazAccessToken() : TaliazAccessToken {
+    return $this->getContainer()->get('App\Services\TaliazAccessToken');
   }
 
 }

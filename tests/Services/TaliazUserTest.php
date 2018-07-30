@@ -93,22 +93,4 @@ class TaliazUserTest extends TaliazBaseWebTestCase {
     $this->assertNull($this->getTaliazUser()->findUserByMail($user->email));
   }
 
-  /**
-   * Create a user.
-   *
-   * @return User
-   *  The user object.
-   *
-   * @throws \Exception
-   */
-  protected function createUser() : User {
-    $user = new User();
-    $user->username = 'user' . time() . microtime();
-    $user->setPassword('text');
-    $user->roles = [1];
-    $user->type = 'app';
-    $user->email = 'dummy' . time() . microtime() . '@example.com';
-    return $this->getTaliazUser()->createUser($user);
-  }
-
 }

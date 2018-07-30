@@ -106,7 +106,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
       return false;
     }
 
-    // return true to cause authentication success
+    // Return true to cause authentication success.
     return true;
   }
 
@@ -114,7 +114,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
    * {@inheritdoc}
    */
   public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey) {
-    // on success, let the request continue
+    // On success, let the request continue.
     return null;
   }
 

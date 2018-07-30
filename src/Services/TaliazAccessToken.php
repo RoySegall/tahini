@@ -57,6 +57,7 @@ class TaliazAccessToken {
    *  The registry service.
    * @param TaliazValidator $taliaz_validator
    *  The validator service.
+   * @param AccessTokenRepository $accessTokenRepository
    */
   public function __construct(TaliazDoctrine $taliaz_doctrine, ManagerRegistry $registry, TaliazValidator $taliaz_validator, AccessTokenRepository $accessTokenRepository) {
     $this->doctrine = $taliaz_doctrine;
@@ -82,7 +83,6 @@ class TaliazAccessToken {
     $access_token->access_token = $this->generateHash('access_token', $user);
     $access_token->user = $user;
 
-    $this->taliazValidator->validate($access_token);
     $this->doctrineManager->persist($access_token);
     $this->doctrineManager->flush();
 
