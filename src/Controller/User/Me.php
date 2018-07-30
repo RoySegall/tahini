@@ -33,7 +33,7 @@ class Me extends AbstractTaiazController {
    * @return JsonResponse
    */
   public function userDetails(Request $request, TaliazAccessToken $taliazAccessToken) {
-    return $this->json('a');
+    return $this->json($taliazAccessToken->getAccessTokenFromRequest($request)->user);
   }
 
 }

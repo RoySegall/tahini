@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\Personal\AccessToken;
 use App\Entity\Personal\User;
 use App\Services\TaliazAccessToken;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
    * @var TaliazAccessToken
    */
   protected $TaliazAccessToken;
+
+  /**
+   * @var AccessToken
+   */
+  protected $token;
 
   /**
    * TokenAuthenticator constructor.
@@ -54,6 +60,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
    * to be skipped.
    */
   public function supports(Request $request) {
+    $path = $request->getRequestUri();
     // Check first if we need to skip the access token auth for paths which
     // anonymous users have access.
     if (!in_array($request->getRequestUri(), $this->allowed_anonymous_paths)) {
@@ -73,29 +80,27 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
    * be passed to getUser() as $credentials.
    */
   public function getCredentials(Request $request) {
-    return array('token' => $request->headers->get('X-AUTH-TOKEN'),);
+    return array('token' => $request->headers->get(\App\Services\TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY));
   }
 
   public function getUser($credentials, UserProviderInterface $userProvider) {
-    $apiKey = $credentials['token'];
+    $user = $this->TaliazAccessToken->loadByAccessToken($credentials['token'])->user;
 
-    if (null === $apiKey) {
-      return;
+    if (empty($user->id)) {
+      return null;
     }
 
-    $user = $this->TaliazAccessToken->findUserByAccessToken($apiKey);
-
-    if (!$user->id) {
-      return new User();
-    }
-
-    // if a User object, checkCredentials() is called
-    return $userProvider->loadUserByUsername($apiKey);
+    return $user;
   }
 
   public function checkCredentials($credentials, UserInterface $user) {
-    // check credentials - e.g. make sure the password is valid
-    // no credential check is needed in this case
+    $this->token = $this->TaliazAccessToken->loadByAccessToken($credentials['token']);
+
+    $user = $this->token->user;
+
+    if (empty($user->id)) {
+      return false;
+    }
 
     // return true to cause authentication success
     return true;
@@ -107,11 +112,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
   }
 
   public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
-    $data = array('message' => strtr('Unauthorized actions', $exception->getMessageData())
-
-      // or to translate this message
-      // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
-    );
+    $data = array('message' => strtr('You are not valid. Try again later.', $exception->getMessageData()));
 
     return new JsonResponse($data, Response::HTTP_FORBIDDEN);
   }
@@ -127,6 +128,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
   }
 
   public function supportsRememberMe() {
-    return true;
+    return false;
   }
 }

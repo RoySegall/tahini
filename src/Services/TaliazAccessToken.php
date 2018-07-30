@@ -6,6 +6,7 @@ use App\Entity\Personal\AccessToken;
 use App\Entity\Personal\User;
 use App\Repository\AccessTokenRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 
@@ -18,6 +19,8 @@ use Symfony\Component\Validator\ConstraintViolationList;
  * @package App\Services
  */
 class TaliazAccessToken {
+
+  const ACCESS_TOKEN_HEADER_KEY = 'X-AUTH-TOKEN';
 
   /**
    * @var TaliazDoctrine
@@ -163,15 +166,31 @@ class TaliazAccessToken {
   /**
    * Get the user object by the access token.
    */
-  public function findUserByAccessToken(string $access_token) : User {
+  public function loadByAccessToken(string $access_token) : AccessToken {
     if ($results = $this->doctrine->getAccessTokenRepository()->findBy(['access_token' => $access_token])) {
       /** @var AccessToken $access_token */
       $access_token = reset($results);
 
-      return $access_token->user;
+      if ($access_token->expires < time()) {
+        return new AccessToken();
+      }
+
+      return $access_token;
     }
 
-    return new User();
+    return new AccessToken();
+  }
+
+  /**
+   * Get the the access token from the request object.
+   *
+   * @param Request $request
+   *  The request service.
+   *
+   * @return AccessToken
+   */
+  public function getAccessTokenFromRequest(Request $request) : AccessToken {
+    return $this->loadByAccessToken($request->headers->get(self::ACCESS_TOKEN_HEADER_KEY));
   }
 
   /**

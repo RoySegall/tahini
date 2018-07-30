@@ -107,6 +107,7 @@ class User extends AbstractEntity implements UserInterface {
    * {@inheritdoc}
    */
   public function getRoles() {
+    return [];
   }
 
   /**
