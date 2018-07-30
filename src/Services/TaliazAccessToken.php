@@ -78,7 +78,7 @@ class TaliazAccessToken {
   public function createAccessToken(\App\Entity\Personal\User $user) : AccessToken {
     $access_token = new AccessToken();
 
-    $access_token->expires = time() + self::ACCESS_TOKEN_DURATION;
+    $access_token->expires = time() + $this->getAccessTokenExpires();
     $access_token->refresh_token = $this->generateHash('refresh_token', $user);
     $access_token->access_token = $this->generateHash('access_token', $user);
     $access_token->user = $user;

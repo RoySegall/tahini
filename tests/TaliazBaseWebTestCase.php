@@ -37,11 +37,11 @@ class TaliazBaseWebTestCase extends WebTestCase {
    */
   public function createUser() : User {
     $user = new User();
-    $user->username = 'user' . time() . microtime();
+    $user->username = 'user' . microtime();
     $user->setPassword('text');
     $user->roles = [1];
     $user->type = 'app';
-    $user->email = 'dummy' . time() . microtime() . '@example.com';
+    $user->email = 'dummy' . microtime() . '@example.com';
     return $this->getTaliazUser()->createUser($user);
   }
 

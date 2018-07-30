@@ -11,10 +11,6 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
    * Testing creation of an access token.
    */
   public function testCreateAccessToken() {
-    $user = $this->createUser();
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($this->createUser());
-
-    $this->assertEquals(1,1);
   }
 
   public function testGetAccessToken() {
