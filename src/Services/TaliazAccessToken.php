@@ -201,6 +201,18 @@ class TaliazAccessToken {
   }
 
   /**
+   * Clear the stirng of the access token.
+   *
+   * @param AccessToken $access_token
+   *  The access token object.
+   */
+  public function clearAccessToken(AccessToken $access_token) {
+    $access_token->access_token = NULL;
+    $this->doctrineManager->persist($access_token);
+    $this->doctrineManager->flush();
+  }
+
+  /**
    * Generate a hash from random properties of the user object.
    *
    * @param string $type
