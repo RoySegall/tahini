@@ -163,7 +163,14 @@ class TaliazAccessToken {
   /**
    * Get the user object by the access token.
    */
-  public function findUserByAccessToken() : User {
+  public function findUserByAccessToken(string $access_token) : User {
+    if ($results = $this->doctrine->getAccessTokenRepository()->findBy(['access_token' => $access_token])) {
+      /** @var AccessToken $access_token */
+      $access_token = reset($results);
+
+      return $access_token->user;
+    }
+
     return new User();
   }
 

@@ -2,7 +2,8 @@
 
 namespace App\Security;
 
-use PHPUnit\Runner\Exception;
+use App\Entity\Personal\User;
+use App\Services\TaliazAccessToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,20 +13,38 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class TokenAuthenticator extends AbstractGuardAuthenticator
-{
+class TokenAuthenticator extends AbstractGuardAuthenticator {
+
+  /**
+   * @var TaliazAccessToken
+   */
+  protected $TaliazAccessToken;
+
+  /**
+   * TokenAuthenticator constructor.
+   * @param TaliazAccessToken $taliaz_access_token
+   */
+  public function __construct(TaliazAccessToken $taliaz_access_token) {
+    $this->TaliazAccessToken = $taliaz_access_token;
+  }
 
   /**
    * @var array
    *
    * List of routes which anonymous user are allowed to access.
-   *
-   * Can be a regex pattern or a simple text.
    */
   protected $allowed_anonymous_paths = [
     '/',
     '/api/user/login',
     '/api/user/refresh',
+  ];
+
+  /**
+   * @var array
+   *
+   * List of regex paths.
+   */
+  protected $allowed_anonymous_paths_regex = [
     '(api\/v2\/job-processes\/)[0-9]'
   ];
 
@@ -35,19 +54,17 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
    * to be skipped.
    */
   public function supports(Request $request) {
-    $path = $request->getRequestUri();
-
     // Check first if we need to skip the access token auth for paths which
     // anonymous users have access.
     if (!in_array($request->getRequestUri(), $this->allowed_anonymous_paths)) {
       // The path does not exists in a simple format. Check the regex format.
-      foreach ($this->allowed_anonymous_paths as $allowed_anonymous_path) {
-        if (@preg_match($allowed_anonymous_path . '/m', $path)) {
+      foreach ($this->allowed_anonymous_paths_regex as $allowed_anonymous_paths_regex) {
+        if (@preg_match($allowed_anonymous_paths_regex . '/m', $path)) {
           return false;
         }
       }
     }
-    
+
     return true;
   }
 
@@ -64,6 +81,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     if (null === $apiKey) {
       return;
+    }
+
+    $user = $this->TaliazAccessToken->findUserByAccessToken($apiKey);
+
+    if (!$user->id) {
+      return new User();
     }
 
     // if a User object, checkCredentials() is called
@@ -104,6 +127,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
   }
 
   public function supportsRememberMe() {
-    return false;
+    return true;
   }
 }
