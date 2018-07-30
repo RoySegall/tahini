@@ -147,11 +147,7 @@ class TaliazAccessToken {
 
       // Keep track of the user.
       $user = $access_token->user;
-      $access_token->user = NULL;
-
-      // Delete the old access token.
-      $this->doctrineManager->remove($access_token);
-      $this->doctrineManager->flush();
+      $this->revokeAccessToken($access_token);
 
       // Create a new refresh token.
       $new_access_token = $this->createAccessToken($user);
@@ -191,6 +187,17 @@ class TaliazAccessToken {
    */
   public function getAccessTokenFromRequest(Request $request) : AccessToken {
     return $this->loadByAccessToken($request->headers->get(self::ACCESS_TOKEN_HEADER_KEY));
+  }
+
+  /**
+   * Revoking the access token from the user.
+   */
+  public function revokeAccessToken(AccessToken $access_token) {
+    $access_token->user = NULL;
+
+    // Delete the old access token.
+    $this->doctrineManager->remove($access_token);
+    $this->doctrineManager->flush();
   }
 
   /**

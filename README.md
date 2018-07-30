@@ -388,3 +388,28 @@ that. Just do:
 ```php
 bin/console user:get-auth
 ```
+
+### Creating an access token
+In a brief text, this command will create an access token in the system for a 
+user. In case the token is invalid it will generate a new one.
+
+```bash
+bin/console user:generate-access-token
+```
+
+### Remove old tokens
+Although a token is being check if valid or not when loading it from the system,
+the system need to go over the tokens and remove them.
+
+```bash
+bin/console user:user:prune-tokens
+```
+
+Set this one in a cron task for every day. Like that:
+```bash
+
+00 00 * * * PATH/TO/PHP/ bin/console user:user:prune-tokens
+
+
+```
+
