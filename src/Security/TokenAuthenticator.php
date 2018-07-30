@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use PHPUnit\Runner\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,81 +14,96 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
-    /**
-     * Called on every request to decide if this authenticator should be
-     * used for the request. Returning false will cause this authenticator
-     * to be skipped.
-     */
-    public function supports(Request $request)
-    {
-        return FALSE;
-    }
 
-    /**
-     * Called on every request. Return whatever credentials you want to
-     * be passed to getUser() as $credentials.
-     */
-    public function getCredentials(Request $request)
-    {
-        return array(
-            'token' => $request->headers->get('X-AUTH-TOKEN'),
-        );
-    }
+  /**
+   * @var array
+   *
+   * List of routes which anonymous user are allowed to access.
+   *
+   * Can be a regex pattern or a simple text.
+   */
+  protected $allowed_anonymous_paths = [
+    '/',
+    '/api/user/login',
+    '/api/user/refresh',
+    '(api\/v2\/job-processes\/)[0-9]'
+  ];
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
-    {
-        $apiKey = $credentials['token'];
+  /**
+   * Called on every request to decide if this authenticator should be
+   * used for the request. Returning false will cause this authenticator
+   * to be skipped.
+   */
+  public function supports(Request $request) {
+    $path = $request->getRequestUri();
 
-        if (null === $apiKey) {
-            return;
+    // Check first if we need to skip the access token auth for paths which
+    // anonymous users have access.
+    if (!in_array($request->getRequestUri(), $this->allowed_anonymous_paths)) {
+      // The path does not exists in a simple format. Check the regex format.
+      foreach ($this->allowed_anonymous_paths as $allowed_anonymous_path) {
+        if (@preg_match($allowed_anonymous_path . '/m', $path)) {
+          return false;
         }
+      }
+    }
+    
+    return true;
+  }
 
-        // if a User object, checkCredentials() is called
-        return $userProvider->loadUserByUsername($apiKey);
+  /**
+   * Called on every request. Return whatever credentials you want to
+   * be passed to getUser() as $credentials.
+   */
+  public function getCredentials(Request $request) {
+    return array('token' => $request->headers->get('X-AUTH-TOKEN'),);
+  }
+
+  public function getUser($credentials, UserProviderInterface $userProvider) {
+    $apiKey = $credentials['token'];
+
+    if (null === $apiKey) {
+      return;
     }
 
-    public function checkCredentials($credentials, UserInterface $user)
-    {
-        // check credentials - e.g. make sure the password is valid
-        // no credential check is needed in this case
+    // if a User object, checkCredentials() is called
+    return $userProvider->loadUserByUsername($apiKey);
+  }
 
-        // return true to cause authentication success
-        return true;
-    }
+  public function checkCredentials($credentials, UserInterface $user) {
+    // check credentials - e.g. make sure the password is valid
+    // no credential check is needed in this case
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
-    {
-        // on success, let the request continue
-        return null;
-    }
+    // return true to cause authentication success
+    return true;
+  }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
-    {
-        $data = array(
-            'message' => strtr('Unauthorized actions', $exception->getMessageData())
+  public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey) {
+    // on success, let the request continue
+    return null;
+  }
 
-            // or to translate this message
-            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
-        );
+  public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
+    $data = array('message' => strtr('Unauthorized actions', $exception->getMessageData())
 
-        return new JsonResponse($data, Response::HTTP_FORBIDDEN);
-    }
+      // or to translate this message
+      // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
+    );
 
-    /**
-     * Called when authentication is needed, but it's not sent
-     */
-    public function start(Request $request, AuthenticationException $authException = null)
-    {
-        $data = array(
-            // you might translate this message
-            'message' => 'Authentication Required'
-        );
+    return new JsonResponse($data, Response::HTTP_FORBIDDEN);
+  }
 
-        return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
-    }
+  /**
+   * Called when authentication is needed, but it's not sent
+   */
+  public function start(Request $request, AuthenticationException $authException = null) {
+    $data = array(// you might translate this message
+      'message' => 'Authentication Required');
 
-    public function supportsRememberMe()
-    {
-        return false;
-    }
+    return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+  }
+
+  public function supportsRememberMe() {
+    return false;
+  }
 }
