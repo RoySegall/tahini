@@ -407,9 +407,6 @@ bin/console user:user:prune-tokens
 
 Set this one in a cron task for every day. Like that:
 ```bash
-
 00 00 * * * PATH/TO/PHP/ bin/console user:user:prune-tokens
-
-
 ```
 

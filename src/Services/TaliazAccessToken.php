@@ -101,7 +101,7 @@ class TaliazAccessToken {
       return $this->createAccessToken($user);
     }
 
-    if ($access_token->expires < time()) {
+    if (time() > $access_token->expires) {
 
       if ($unvalid_create_new) {
         // Creating a new access token.
@@ -167,7 +167,7 @@ class TaliazAccessToken {
       /** @var AccessToken $access_token */
       $access_token = reset($results);
 
-      if ($access_token->expires < time()) {
+      if (time() > $access_token->expires) {
         return new AccessToken();
       }
 

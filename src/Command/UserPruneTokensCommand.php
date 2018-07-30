@@ -44,7 +44,7 @@ class UserPruneTokensCommand extends Command
     $tokens = $this->TaliazDoctrine->getAccessTokenRepository()->findAll();
     $counts = 0;
     foreach ($tokens as $token) {
-      if (($token->expires - time()) < 0) {
+      if (time() > $token->expires) {
         $this->TaliazAccessToken->clearAccessToken($token);
         $io->writeln('The access token for the user ' . $token->user->username . ' has been pruned from tye system');
         $counts++;
