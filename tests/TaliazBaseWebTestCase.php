@@ -30,19 +30,27 @@ class TaliazBaseWebTestCase extends WebTestCase {
   /**
    * Create a user.
    *
+   * @param bool $create_user
+   *  Determine if we need to create a user.
+   *
    * @return User
    *  The user object.
    *
    * @throws \Exception
    */
-  public function createUser() : User {
+  public function createUser(bool $create_user = true) : User {
     $user = new User();
     $user->username = 'user' . microtime();
     $user->setPassword('text');
     $user->roles = [1];
     $user->type = 'app';
     $user->email = 'dummy' . microtime() . '@example.com';
-    return $this->getTaliazUser()->createUser($user);
+
+    if ($create_user) {
+      $this->getTaliazUser()->createUser($user);
+    }
+
+    return $user;
   }
 
   /**
