@@ -22,6 +22,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class Login extends AbstractTaiazController {
 
+  const DATE_FORMAT = 'd/m/Y';
+
   /**
    * @Route("login", methods={"POST"})
    *
@@ -35,15 +37,23 @@ class Login extends AbstractTaiazController {
    * @return JsonResponse
    */
   public function loginController(Request $request, TaliazUser $taliaz_user, TaliazAccessToken $taliazAccessToken) {
-    $payload = $this->processPayload($request);
+    if (!$payload = $this->processPayload($request)) {
+      return $this->error("The payload is not correct.", Response::HTTP_BAD_REQUEST);
+    }
 
     if (!$auth = $payload->get('auth')) {
       return $this->error("The payload is not correct.", Response::HTTP_BAD_REQUEST);
     }
 
-    list($date, $username, $password) = explode("_", base64_decode($auth));
+    $exploded_auth = explode("_", base64_decode($auth));
 
-    if ($date != date("d/m/Y")) {
+    if (count($exploded_auth) != 3) {
+      return $this->error("The payload is not correct.", Response::HTTP_BAD_REQUEST);
+    }
+
+    list($date, $username, $password) = $exploded_auth;
+
+    if ($date != date(self::DATE_FORMAT)) {
       return $this->error("The payload is not correct", Response::HTTP_BAD_REQUEST);
     }
 
@@ -79,7 +89,10 @@ class Login extends AbstractTaiazController {
    * @return JsonResponse
    */
   public function refreshToken(Request $request, TaliazAccessToken $taliazAccessToken) {
-    $payload = $this->processPayload($request);
+
+    if (!$payload = $this->processPayload($request)) {
+      return $this->error("The payload is not correct.", Response::HTTP_BAD_REQUEST);
+    }
 
     if (!$refresh_token = $payload->get('refresh_token')) {
       return $this->error('The refresh token is missing', Response::HTTP_BAD_REQUEST);

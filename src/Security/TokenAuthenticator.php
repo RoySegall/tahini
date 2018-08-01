@@ -58,14 +58,18 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
    */
   public function supports(Request $request) {
     $path = $request->getRequestUri();
+
     // Check first if we need to skip the access token auth for paths which
     // anonymous users have access.
-    if (!in_array($request->getRequestUri(), $this->allowed_anonymous_paths)) {
-      // The path does not exists in a simple format. Check the regex format.
-      foreach ($this->allowed_anonymous_paths_regex as $allowed_anonymous_paths_regex) {
-        if (@preg_match($allowed_anonymous_paths_regex . '/m', $path)) {
-          return false;
-        }
+    if (in_array($path, $this->allowed_anonymous_paths)) {
+      return false;
+
+    }
+
+    // The path does not exists in a simple format. Check the regex format.
+    foreach ($this->allowed_anonymous_paths_regex as $allowed_anonymous_paths_regex) {
+      if (@preg_match($allowed_anonymous_paths_regex . '/m', $path)) {
+        return false;
       }
     }
 
