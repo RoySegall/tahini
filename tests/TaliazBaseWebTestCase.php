@@ -132,7 +132,7 @@ class TaliazBaseWebTestCase extends WebTestCase {
    *
    * @return Request
    */
-  protected function getRequest() : Request {
+  protected function &getRequest() : Request {
     static $request;
 
     if ($request) {

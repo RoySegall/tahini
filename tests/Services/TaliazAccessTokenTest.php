@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Personal\User;
+use App\Entity\Personal\AccessToken;
 use App\Services\TaliazAccessToken;
 use App\Tests\TaliazBaseWebTestCase;
 
@@ -111,9 +111,7 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
 
     // Making sure the old token still exists.
     $this->assertNotEmpty($this->getTaliazDoctrine()->getAccessTokenRepository()->find($id));
-
     $this->getTaliazAccessToken()->revokeAccessToken($access_token);
-
     $this->assertEmpty($this->getTaliazDoctrine()->getAccessTokenRepository()->find($id));
   }
 
@@ -121,6 +119,20 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
    * Testing that the string of the access token is removed from the DB.
    */
   public function testClearAccessToken() {
+    $access_token = $this->getTaliazAccessToken()->createAccessToken($this->createUser(false));
+
+    $id = $access_token->id;
+
+    // Get the access token.
+    /** @var AccessToken $tokens */
+    $db_token = $this->getTaliazDoctrine()->getAccessTokenRepository()->find($id);
+    $this->assertEquals($db_token->access_token, $access_token->access_token);
+
+    // Clear the access token for the DB.
+    $this->getTaliazAccessToken()->clearAccessToken($access_token);
+
+    $db_token = $this->getTaliazDoctrine()->getAccessTokenRepository()->find($id);
+    $this->assertNull($db_token->access_token);
   }
 
   /**
