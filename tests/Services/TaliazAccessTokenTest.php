@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Personal\User;
+use App\Services\TaliazAccessToken;
 use App\Tests\TaliazBaseWebTestCase;
 
 class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
@@ -85,12 +86,35 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
    * Testing the that we acquire the access token from the refresh.
    */
   public function testGetAccessTokenFromRequest() {
+    $request = new \Symfony\Component\HttpFoundation\Request();
+
+    // Making an request with a bad access token.
+    $request->headers->set(TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY, time());
+    $bad_access_token = $this->getTaliazAccessToken()->getAccessTokenFromRequest($request);
+
+    $this->assertNull($bad_access_token->id);
+
+    // Create a new access token and make sure we get the access token via the
+    // request.
+    $access_token = $this->getTaliazAccessToken()->createAccessToken($this->createUser(false));
+    $request->headers->set(TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY, $access_token->access_token);
+    $this->assertEquals($access_token, $this->getTaliazAccessToken()->getAccessTokenFromRequest($request));
   }
 
   /**
    * Testing the access token is revoked from the DB.
    */
   public function testRevokeAccessToken() {
+    $access_token = $this->getTaliazAccessToken()->createAccessToken($this->createUser(false));
+
+    $id = $access_token->id;
+
+    // Making sure the old token still exists.
+    $this->assertNotEmpty($this->getTaliazDoctrine()->getAccessTokenRepository()->find($id));
+
+    $this->getTaliazAccessToken()->revokeAccessToken($access_token);
+
+    $this->assertEmpty($this->getTaliazDoctrine()->getAccessTokenRepository()->find($id));
   }
 
   /**

@@ -12,6 +12,7 @@ use App\Services\TaliazValidator;
 use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base test class.
@@ -124,6 +125,23 @@ class TaliazBaseWebTestCase extends WebTestCase {
    */
   public function getTaliazAccessToken() : TaliazAccessToken {
     return $this->getContainer()->get('App\Services\TaliazAccessToken');
+  }
+
+  /**
+   * Get the request object.
+   *
+   * @return Request
+   */
+  protected function getRequest() : Request {
+    static $request;
+
+    if ($request) {
+      return $request;
+    }
+
+    $request = new Request();
+
+    return $request;
   }
 
 }
