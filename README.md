@@ -397,6 +397,9 @@ user. In case the token is invalid it will generate a new one.
 bin/console user:generate-access-token
 ```
 
+After creating an app for 3rd party apps, we should send the refresh token,
+access token, and expires to the developers.
+
 ### Remove old tokens
 Although a token is being check if valid or not when loading it from the system,
 the system need to go over the tokens and remove them.
