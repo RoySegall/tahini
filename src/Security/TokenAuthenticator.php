@@ -88,6 +88,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
    */
   public function getUser($credentials, UserProviderInterface $userProvider) {
     // todo: use the authentication plugin.
+
+    if (empty($credentials['token'])) {
+      return null;
+    }
+
     $user = $this->TaliazAccessToken->loadByAccessToken($credentials['token'])->user;
 
     if (empty($user->id)) {
