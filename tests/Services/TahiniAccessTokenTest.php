@@ -132,7 +132,7 @@ class TahiniAccessTokenTest extends TahiniBaseWebTestCase {
     $this->getTahiniAccessToken()->clearAccessToken($access_token);
 
     $db_token = $this->getTahiniDoctrine()->getAccessTokenRepository()->find($id);
-    $this->assertNull($db_token->access_token);
+    $this->assertEquals($db_token->access_token, "");
   }
 
   /**

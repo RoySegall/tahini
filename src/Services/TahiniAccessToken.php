@@ -213,7 +213,7 @@ class TahiniAccessToken {
    *  The access token object.
    */
   public function clearAccessToken(AccessToken $access_token) {
-    $access_token->access_token = NULL;
+    $access_token->access_token = "";
     $this->doctrineManager->persist($access_token);
     $this->doctrineManager->flush();
   }
