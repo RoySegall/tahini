@@ -13,10 +13,9 @@ use App\Plugins\Annotations\Authentication;
 class Cookie extends AuthenticationPluginBase
 {
 
-  /**
-   * Making sure the user is valid.
-   */
-    public function validateUser()
-    {
+    /**
+     * Making sure the user is valid.
+     */
+    function validateUser() {
     }
 }
