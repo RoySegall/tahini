@@ -21,4 +21,3 @@ jobs:
 
     - stage: test
       script: php bin/phpunit
-
