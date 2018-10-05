@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Personal\AccessToken;
+use App\Entity\AccessToken;
 use App\Tests\TahiniBaseWebTestCase;
 
 /**
@@ -35,7 +35,7 @@ class MeTest extends TahiniBaseWebTestCase {
     $access_token = $this->getTahiniAccessToken()->createAccessToken($this->createUser(false));
 
     // Set the token as un-valid.
-    $entity_manager = $this->getDoctrine()->getManager('personal');
+    $entity_manager = $this->getDoctrine()->getManager();
 
     $access_token = $entity_manager->find(AccessToken::class, $access_token->id);
     $access_token->expires = time() - 10;

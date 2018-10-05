@@ -22,14 +22,7 @@ class HomeControllerTest extends WebTestCase {
     $response = $client->getResponse();
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertEquals(json_decode($response->getContent(), true), [
-      'title' => 'Taliaz Health',
-      'Sys Admin' => [
-        'name' => 'Sagee Lupin',
-        'email' => 'tech.team@taliazhealth.com',
-      ],
-      'version' => '2.1',
-      'env' => 'test',
-      'ip_address' => '127.0.0.1',
+      'message' => 'Welcome!',
     ]);
   }
 

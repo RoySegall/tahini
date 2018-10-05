@@ -15,12 +15,12 @@ In the `.env` file add the DB settings:
 
 ```
 DEFAULT_DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name
-PERSONAL_DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name_personal
 ```
 
 After you got the DB settings up and running
 ```bash
 bin/console doctrine:database:create
+bin/console doctrine:schema:create
 ```
 
 When you have changes in the entity you can do
@@ -40,9 +40,8 @@ needed to pass a lot of parameters to the command. Now, we have a better way.
 
 ### First, apply your changes
 Go to `src/Entity` and then go to the sub-folders which represent the various 
-DBs. The entity `job_process` is located under `Main` while the `user` entity is
-located under the `Personal` folder. Go to the one of the entity class and add
-the new field or change the name of the field.
+DBs. Go to the one of the entity class and add the new field or change the name 
+of the field.
 
 ### Second, generate the migration
 Now, we need generate the new command which apply our change. You can do 
@@ -50,12 +49,7 @@ something like this:
 ```bash
 # No need for default be let's keep the environment so we would know which 
 # environment will be affected.
-bin/console doctrine:migrations:diff --em=default
-```
-
-or:
-```bash
-bin/console doctrine:migrations:diff --em=personal
+bin/console doctrine:migrations:diff
 ```
 
 We will get:
@@ -69,7 +63,7 @@ Cool!
 ### Third and last, running the migration
 Very easy:
 ```bash
-bin/console doctrine:migrations:migrate --em=personal
+bin/console doctrine:migrations:migrate
 ```
 
 The result will amaze you as well:
@@ -327,9 +321,9 @@ them from the container in tests:
     namespace App\Tests\Controller;
     
     use App\Plugins\Authentication;
-    use App\Tests\TaliazBaseWebTestCase;
+    use App\Tests\TahiniBaseWebTestCase;
     
-    class SomeClassForTest extends TaliazBaseWebTestCase {
+    class SomeClassForTest extends TahiniBaseWebTestCase {
     
       /**
        * Get the authentication service.

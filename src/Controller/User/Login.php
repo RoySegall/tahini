@@ -4,9 +4,7 @@ namespace App\Controller\User;
 
 use App\Controller\AbstractTaiazController;
 use App\Services\TahiniAccessToken;
-use App\Services\TahiniDoctrine;
 use App\Services\TahiniUser;
-use App\Services\TahiniValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

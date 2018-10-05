@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use \Doctrine\ORM\Mapping\Table as Table;
-use \App\Entity\Personal;
 use App\Entity\AbstractEntity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,7 +25,7 @@ class AccessToken extends AbstractEntity {
   public $id;
 
   /**
-   * @ORM\Column(type="string", length=255)
+   * @ORM\Column(type="string", nullable=true, length=255)
    */
   public $access_token;
 
@@ -42,7 +41,7 @@ class AccessToken extends AbstractEntity {
 
   /**
    * @var User
-   * @ORM\OneToOne(targetEntity="\App\Entity\Personal\User", cascade={"persist", "remove"})
+   * @ORM\OneToOne(targetEntity="\App\Entity\User", cascade={"persist", "remove"})
    * @ORM\JoinColumn(nullable=false)
    */
   public $user;

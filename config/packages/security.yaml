@@ -2,11 +2,11 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         taliz:
-            id: App\Security\TaliazUserServiceProvider
+            id: App\Security\TahiniUserServiceProvider
 
     encoders:
-            \App\Entity\Personal\User: sha512
-            App\Security\TaliazUserServiceProvider: sha512
+            \App\Entity\User: sha512
+            App\Security\TahiniUserServiceProvider: sha512
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

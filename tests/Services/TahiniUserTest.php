@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Personal\User;
+use App\Entity\User;
 use App\Tests\TahiniBaseWebTestCase;
 
 class TahiniUserTest extends TahiniBaseWebTestCase {
