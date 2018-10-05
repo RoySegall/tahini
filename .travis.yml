@@ -6,7 +6,7 @@ services:
 
 before_script:
   - composer self-update
-  - compoer install
+  - composer install
   - mysql -e 'CREATE DATABASE tahini;'
   - cat .env
 
