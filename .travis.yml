@@ -15,4 +15,5 @@ before_script:
   - bin/console doctrine:schema:create
 
 script:
+  - vendor/bin/phpcs src --standard=PSR2 --colors
   - php bin/phpunit
