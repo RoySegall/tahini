@@ -14,10 +14,6 @@ before_script:
   - composer install
   - bin/console doctrine:schema:create
 
-jobs:
-  include:
-    - stage: test
-      script: - vendor/bin/phpcs src --standard=PSR2 --colors
-
-    - stage: test
-      script: php bin/phpunit
+script:
+  - vendor/bin/phpcs src --standard=PSR2 --colors
+  - php bin/phpunit
