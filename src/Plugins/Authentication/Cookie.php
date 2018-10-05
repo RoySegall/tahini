@@ -16,6 +16,7 @@ class Cookie extends AuthenticationPluginBase
     /**
      * Making sure the user is valid.
      */
-    function validateUser() {
+    public function validateUser()
+    {
     }
 }
