@@ -12,6 +12,8 @@ before_script:
   - cp .travis.env .env
   - cp .travis.phpunit.xml.dist phpunit.xml.dist
   - composer install
+  - bin/console doctrine:database:create
+  - bin/console doctrine:schema:create
 
 script:
   - php bin/phpunit
