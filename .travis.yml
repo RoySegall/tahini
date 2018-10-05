@@ -9,8 +9,7 @@ before_script:
   - composer self-update
   - mysql -e 'CREATE DATABASE tahini;'
   - cp .travis.env .env
-  - cat .env
   - composer install
 
 script:
-  - echo "a"
+  - php bin/phpunit
