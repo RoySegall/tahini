@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/api/v2/job-processes")
  */
-class JobProcessController extends AbstractEntityController {
+class JobProcessController extends AbstractTaiazController {
 
   /**
    * @Route("/", methods={"GET"})

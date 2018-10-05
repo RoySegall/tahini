@@ -9,8 +9,10 @@ use App\Tests\TaliazBaseWebTestCase;
  * Testing the home controller.
  *
  * @package App\Tests\Controller
+ *
+ * Cooment out for now.
  */
-class JobProcessControllerTest extends TaliazBaseWebTestCase {
+class JobProcessController extends TaliazBaseWebTestCase {
 
   /**
    * Testing the job process crud operations.

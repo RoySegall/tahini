@@ -2,7 +2,9 @@
 
 namespace App\Tests;
 
+use App\Entity\Personal\User;
 use App\Plugins\Authentication;
+use App\Services\TaliazAccessToken;
 use App\Services\TaliazDoctrine;
 use App\Services\TaliazOldProcessor;
 use App\Services\TaliazUser;
@@ -10,6 +12,7 @@ use App\Services\TaliazValidator;
 use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base test class.
@@ -23,6 +26,32 @@ class TaliazBaseWebTestCase extends WebTestCase {
 
     // Booting up the kernal.
     self::bootKernel();
+  }
+
+  /**
+   * Create a user.
+   *
+   * @param bool $create_user
+   *  Determine if we need to create a user.
+   *
+   * @return User
+   *  The user object.
+   *
+   * @throws \Exception
+   */
+  public function createUser(bool $create_user = true) : User {
+    $user = new User();
+    $user->username = 'user' . microtime();
+    $user->setPassword('text');
+    $user->roles = [1];
+    $user->type = 'app';
+    $user->email = 'dummy' . microtime() . '@example.com';
+
+    if ($create_user) {
+      $this->getTaliazUser()->createUser($user);
+    }
+
+    return $user;
   }
 
   /**
@@ -87,6 +116,32 @@ class TaliazBaseWebTestCase extends WebTestCase {
    */
   protected function getTaliazUser() : TaliazUser {
     return $this->getContainer()->get('App\Services\TaliazUser');
+  }
+
+  /**
+   * Get the access token service.
+   *
+   * @return TaliazAccessToken
+   */
+  public function getTaliazAccessToken() : TaliazAccessToken {
+    return $this->getContainer()->get('App\Services\TaliazAccessToken');
+  }
+
+  /**
+   * Get the request object.
+   *
+   * @return Request
+   */
+  protected function &getRequest() : Request {
+    static $request;
+
+    if ($request) {
+      return $request;
+    }
+
+    $request = new Request();
+
+    return $request;
   }
 
 }

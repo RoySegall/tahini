@@ -2,17 +2,19 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "api-platform/api-pack": "^1.1",
         "doctrine/doctrine-migrations-bundle": "^1.3",
+        "doctrine/orm": "^2.6",
         "kint-php/kint": "^2.2",
         "symfony/console": "^4.1",
         "symfony/finder": "^4.1",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.1",
         "symfony/lts": "^4@dev",
+        "symfony/proxy-manager-bridge": "^4.1",
         "symfony/yaml": "^4.1"
     },
     "require-dev": {

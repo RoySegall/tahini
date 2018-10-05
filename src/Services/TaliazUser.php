@@ -91,7 +91,7 @@ class TaliazUser {
     ];
 
     if ($password) {
-      $attributes['password'] = $password;
+      $attributes['password'] = $this->hashPassword($password);
     }
 
     if ($results = $this->doctrine->getUserRepository()->findBy($attributes)) {

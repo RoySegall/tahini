@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class AbstractEntityController extends AbstractController {
+abstract class AbstractTaiazController extends AbstractController {
 
   /**
    * Convert the payload to object.
