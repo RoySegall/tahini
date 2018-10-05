@@ -12,26 +12,27 @@ namespace App\Plugins;
  *
  * @package App\Plugins
  */
-interface PluginManagerInterface {
+interface PluginManagerInterface
+{
 
   /**
    * Get all the plugins which match a given namespace.
    *
    * @return array
    */
-  public function getPlugins() : array;
+    public function getPlugins() : array;
 
   /**
    * @return string
    */
-  public function getNamespace() : string;
+    public function getNamespace() : string;
 
   /**
    * Get the annotation handler.
    *
    * @return string
    */
-  public function getAnnotationHandler() : string;
+    public function getAnnotationHandler() : string;
 
   /**
    * Get a single instance of a plugin.
@@ -42,7 +43,7 @@ interface PluginManagerInterface {
    * @return PluginBase
    * @throws \Exception
    */
-  public function getPlugin(string $plugin_id) : PluginBase;
+    public function getPlugin(string $plugin_id) : PluginBase;
 
   /**
    * Getting the best plugin for the current task.
@@ -51,7 +52,7 @@ interface PluginManagerInterface {
    * first - Authentication need to pull the first plugin which return a match,
    * mail plugin need to send according to what define in the DB etc. etc.
    */
-  public function negotiate() : PluginBase;
+    public function negotiate() : PluginBase;
 
   /**
    * Converting all the namespace of the plugins to a real path.
@@ -61,6 +62,5 @@ interface PluginManagerInterface {
    *
    * @return string
    */
-  public function convertNamespaceToPath(string $path) : string;
-
+    public function convertNamespaceToPath(string $path) : string;
 }

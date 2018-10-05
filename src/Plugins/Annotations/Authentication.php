@@ -8,10 +8,10 @@ use Doctrine\Common\Annotations\Annotation;
  * @Annotation
  * @Target("CLASS")
  */
-class Authentication {
+class Authentication
+{
 
-  public $id;
+    public $id;
 
-  public $name;
-
+    public $name;
 }

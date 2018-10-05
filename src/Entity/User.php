@@ -15,7 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource
  * @ORM\Entity
  */
-class User extends AbstractEntity implements UserInterface {
+class User extends AbstractEntity implements UserInterface
+{
 
   /**
    * @var int The id of the user.
@@ -24,7 +25,7 @@ class User extends AbstractEntity implements UserInterface {
    * @ORM\GeneratedValue
    * @ORM\Column(type="integer", options={"unsigned":true})
    */
-  public $id;
+    public $id;
 
   /**
    * @var string The username.
@@ -32,7 +33,7 @@ class User extends AbstractEntity implements UserInterface {
    * @Assert\NotNull()
    * @ORM\Column(type="string", nullable=false, unique=true)
    */
-  public $username;
+    public $username;
 
   /**
    * @var string The password.
@@ -40,14 +41,14 @@ class User extends AbstractEntity implements UserInterface {
    * @Assert\NotNull()
    * @ORM\Column(type="string", nullable=false)
    */
-  protected $password;
+    protected $password;
 
   /**
    * @var string The user roles.
    *
    * @Assert\NotNull()
    */
-  public $roles;
+    public $roles;
 
   /**
    * @var string The user type.
@@ -59,7 +60,7 @@ class User extends AbstractEntity implements UserInterface {
    *     message = "The allowed values are 'app' or 'user'"
    * )
    */
-  public $type;
+    public $type;
 
   /**
    * @var string The user's email.
@@ -68,21 +69,21 @@ class User extends AbstractEntity implements UserInterface {
    * @ORM\Column(type="string", nullable=false, unique=true)
    * @Assert\Email()
    */
-  public $email;
+    public $email;
 
   /**
    * @var boolean When the record has created.
    *
    * @ORM\Column(type="datetime", nullable=true)
    */
-  public $created;
+    public $created;
 
   /**
    * @var boolean When the record has been updated.
    *
    * @ORM\Column(type="datetime", nullable=true)
    */
-  public $updated;
+    public $updated;
 
   /**
    * Setting the password for a user.
@@ -90,42 +91,47 @@ class User extends AbstractEntity implements UserInterface {
    * @param string $password
    *  The new password.
    */
-  public function setPassword(string $password) {
-    $this->password = $password;
-  }
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
+    }
 
   /**
    * Get the password of the user.
    *
    * @return string
    */
-  public function getPassword() : string {
-    return $this->password;
-  }
+    public function getPassword() : string
+    {
+        return $this->password;
+    }
 
   /**
    * {@inheritdoc}
    */
-  public function getRoles() {
-    return [];
-  }
+    public function getRoles()
+    {
+        return [];
+    }
 
   /**
    * {@inheritdoc}
    */
-  public function getSalt() {
-  }
+    public function getSalt()
+    {
+    }
 
   /**
    * {@inheritdoc}
    */
-  public function getUsername() {
-  }
+    public function getUsername()
+    {
+    }
 
   /**
    * {@inheritdoc}
    */
-  public function eraseCredentials() {
-  }
-
+    public function eraseCredentials()
+    {
+    }
 }

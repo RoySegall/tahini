@@ -15,35 +15,35 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource
  * @ORM\Entity
  */
-class AccessToken extends AbstractEntity {
+class AccessToken extends AbstractEntity
+{
 
   /**
    * @ORM\Id()
    * @ORM\GeneratedValue()
    * @ORM\Column(type="integer")
    */
-  public $id;
+    public $id;
 
   /**
    * @ORM\Column(type="string", length=255)
    */
-  public $access_token;
+    public $access_token;
 
   /**
    * @ORM\Column(type="string", length=255)
    */
-  public $refresh_token;
+    public $refresh_token;
 
   /**
    * @ORM\Column(type="integer")
    */
-  public $expires;
+    public $expires;
 
   /**
    * @var User
    * @ORM\OneToOne(targetEntity="\App\Entity\User", cascade={"persist", "remove"})
    * @ORM\JoinColumn(nullable=false)
    */
-  public $user;
-
+    public $user;
 }

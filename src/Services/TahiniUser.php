@@ -15,27 +15,28 @@ use Symfony\Component\Validator\ConstraintViolationList;
  *
  * @package App\Services
  */
-class TahiniUser {
+class TahiniUser
+{
 
   /**
    * @var TahiniDoctrine
    */
-  protected $doctrine;
+    protected $doctrine;
 
   /**
    * @var UserPasswordEncoderInterface
    */
-  protected $encoder;
+    protected $encoder;
 
   /**
    * @var TahiniValidator
    */
-  protected $tahiniValidator;
+    protected $tahiniValidator;
 
   /**
    * @var \Doctrine\Common\Persistence\ObjectManager|object
    */
-  protected $doctrineManager;
+    protected $doctrineManager;
 
   /**
    * TahiniUser constructor.
@@ -48,17 +49,17 @@ class TahiniUser {
    *  The tahini validator service.
    * @param ManagerRegistry $registry
    */
-  public function __construct(
-    TahiniDoctrine $tahini_doctrine,
-    UserPasswordEncoderInterface $encoder,
-    TahiniValidator $tahini_validator,
-    ManagerRegistry $registry
-  ) {
-    $this->doctrine = $tahini_doctrine;
-    $this->encoder = $encoder;
-    $this->tahiniValidator = $tahini_validator;
-    $this->doctrineManager = $registry->getManager();
-  }
+    public function __construct(
+        TahiniDoctrine $tahini_doctrine,
+        UserPasswordEncoderInterface $encoder,
+        TahiniValidator $tahini_validator,
+        ManagerRegistry $registry
+    ) {
+        $this->doctrine = $tahini_doctrine;
+        $this->encoder = $encoder;
+        $this->tahiniValidator = $tahini_validator;
+        $this->doctrineManager = $registry->getManager();
+    }
 
   /**
    * Create a hashed password.
@@ -68,9 +69,10 @@ class TahiniUser {
    *
    * @return string
    */
-  public function hashPassword(string $password) : string {
-    return $this->encoder->encodePassword(new User(), $password);
-  }
+    public function hashPassword(string $password) : string
+    {
+        return $this->encoder->encodePassword(new User(), $password);
+    }
 
   /**
    * Finding the user which the match the username and password.
@@ -85,21 +87,22 @@ class TahiniUser {
    * @return User|null
    *  The user object.
    */
-  public function findUserByUsername(string $username, string $password = null) {
-    $attributes = [
-      'username' => $username,
-    ];
+    public function findUserByUsername(string $username, string $password = null)
+    {
+        $attributes = [
+        'username' => $username,
+        ];
 
-    if ($password) {
-      $attributes['password'] = $this->hashPassword($password);
+        if ($password) {
+            $attributes['password'] = $this->hashPassword($password);
+        }
+
+        if ($results = $this->doctrine->getUserRepository()->findBy($attributes)) {
+            return reset($results);
+        }
+
+        return null;
     }
-
-    if ($results = $this->doctrine->getUserRepository()->findBy($attributes)) {
-      return reset($results);
-    }
-
-    return null;
-  }
 
   /**
    * Get user by mail.
@@ -109,15 +112,16 @@ class TahiniUser {
    *
    * @return array
    */
-  public function findUserByMail(string $email) {
-    $users = $this->doctrine->getUserRepository()->findBy(['email' => $email]);
+    public function findUserByMail(string $email)
+    {
+        $users = $this->doctrine->getUserRepository()->findBy(['email' => $email]);
 
-    if ($user = reset($users)) {
-      return $user;
+        if ($user = reset($users)) {
+            return $user;
+        }
+
+        return null;
     }
-
-    return null;
-  }
 
   /**
    * Creating the user.
@@ -130,29 +134,30 @@ class TahiniUser {
    *
    * @throws \Exception
    */
-  public function createUser(User $user) {
+    public function createUser(User $user)
+    {
 
-    if ($errors = $this->tahiniValidator->validate($user, true)) {
-      throw $errors;
+        if ($errors = $this->tahiniValidator->validate($user, true)) {
+            throw $errors;
+        }
+
+      // Check the username not exists in the system.
+        if ($this->findUserByUsername($user->username)) {
+            throw new \Exception('The username already exists');
+        }
+
+      // Check the email does not exists.
+        if ($this->findUserByMail($user->email)) {
+            throw new \Exception('The email already exists');
+        }
+
+        $user->setPassword($this->hashPassword($user->getPassword()));
+
+        $this->doctrineManager->persist($user);
+        $this->doctrineManager->flush();
+
+        return $user;
     }
-
-    // Check the username not exists in the system.
-    if ($this->findUserByUsername($user->username)) {
-      throw new \Exception('The username already exists');
-    }
-
-    // Check the email does not exists.
-    if ($this->findUserByMail($user->email)) {
-      throw new \Exception('The email already exists');
-    }
-
-    $user->setPassword($this->hashPassword($user->getPassword()));
-
-    $this->doctrineManager->persist($user);
-    $this->doctrineManager->flush();
-
-    return $user;
-  }
 
   /**
    * Updating the user.
@@ -163,12 +168,13 @@ class TahiniUser {
    * @return User $user
    *  The new user object.
    */
-  public function updateUser(User $user) : User {
-    $this->doctrineManager->persist($user);
-    $this->doctrineManager->flush();
+    public function updateUser(User $user) : User
+    {
+        $this->doctrineManager->persist($user);
+        $this->doctrineManager->flush();
 
-    return $user;
-  }
+        return $user;
+    }
 
   /**
    * Delete the user.
@@ -176,9 +182,9 @@ class TahiniUser {
    * @param User $user
    *  The user object.
    */
-  public function deleteUser(User $user) {
-    $this->doctrineManager->remove($user);
-    $this->doctrineManager->flush();
-  }
-
+    public function deleteUser(User $user)
+    {
+        $this->doctrineManager->remove($user);
+        $this->doctrineManager->flush();
+    }
 }

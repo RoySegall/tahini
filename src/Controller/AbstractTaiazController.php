@@ -9,7 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class AbstractTaiazController extends AbstractController {
+abstract class AbstractTaiazController extends AbstractController
+{
 
   /**
    * Convert the payload to object.
@@ -21,18 +22,19 @@ abstract class AbstractTaiazController extends AbstractController {
    *
    * @return JsonResponse
    */
-  protected function payloadToEntity(AbstractEntity $entity, Request $request) {
+    protected function payloadToEntity(AbstractEntity $entity, Request $request)
+    {
 
-    if (!$new_data = $this->processPayload($request)) {
-      return $this->error('The post is empty', Response::HTTP_BAD_REQUEST);
+        if (!$new_data = $this->processPayload($request)) {
+            return $this->error('The post is empty', Response::HTTP_BAD_REQUEST);
+        }
+
+        $flipped = array_flip($entity->getMapper());
+
+        foreach ($new_data as $key => $value) {
+            $entity->{$flipped[$key]} = $value;
+        }
     }
-
-    $flipped = array_flip($entity->getMapper());
-
-    foreach ($new_data as $key => $value) {
-      $entity->{$flipped[$key]} = $value;
-    }
-  }
 
   /**
    * Update the entity.
@@ -40,11 +42,12 @@ abstract class AbstractTaiazController extends AbstractController {
    * @param AbstractEntity $entity
    *  The entity object.
    */
-  protected function updateEntity(AbstractEntity $entity) {
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->persist($entity);
-    $entityManager->flush();
-  }
+    protected function updateEntity(AbstractEntity $entity)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($entity);
+        $entityManager->flush();
+    }
 
   /**
    * Processing the payload.
@@ -52,15 +55,16 @@ abstract class AbstractTaiazController extends AbstractController {
    * @return \Doctrine\Common\Collections\ArrayCollection
    *   Return the payload as an object.
    */
-  protected function processPayload(Request $request) {
-    $content = $request->getContent();
+    protected function processPayload(Request $request)
+    {
+        $content = $request->getContent();
 
-    if (!$decoded = json_decode($content, true)) {
-      return;
+        if (!$decoded = json_decode($content, true)) {
+            return;
+        }
+
+        return new ArrayCollection($decoded);
     }
-
-    return new ArrayCollection($decoded);
-  }
 
   /**
    * Return a JSON error response.
@@ -72,8 +76,8 @@ abstract class AbstractTaiazController extends AbstractController {
    *
    * @return JsonResponse
    */
-  protected function error($error, $code = Response::HTTP_NOT_FOUND) {
-    return $this->json(['error' => $error], $code);
-  }
-
+    protected function error($error, $code = Response::HTTP_NOT_FOUND)
+    {
+        return $this->json(['error' => $error], $code);
+    }
 }

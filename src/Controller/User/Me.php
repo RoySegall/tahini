@@ -19,7 +19,8 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/api/me")
  */
-class Me extends AbstractTaiazController {
+class Me extends AbstractTaiazController
+{
 
   /**
    * @Route("", methods={"GET"})
@@ -31,8 +32,8 @@ class Me extends AbstractTaiazController {
    *
    * @return JsonResponse
    */
-  public function userDetails(Request $request, TahiniAccessToken $tahiniAccessToken) {
-    return $this->json($tahiniAccessToken->getAccessTokenFromRequest($request)->user);
-  }
-
+    public function userDetails(Request $request, TahiniAccessToken $tahiniAccessToken)
+    {
+        return $this->json($tahiniAccessToken->getAccessTokenFromRequest($request)->user);
+    }
 }

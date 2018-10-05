@@ -9,9 +9,10 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Controller with the basic information about the system.
  */
-class HomeController extends AbstractController {
+class HomeController extends AbstractController
+{
 
-  public const VERSION = '2.1';
+    public const VERSION = '2.1';
 
   /**
    * @Route("/", methods={"GET"})
@@ -19,8 +20,8 @@ class HomeController extends AbstractController {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *  Return a json info about the system.
    */
-  public function index() {
-    return $this->json(['message' => 'Welcome!']);
-  }
-
+    public function index()
+    {
+        return $this->json(['message' => 'Welcome!']);
+    }
 }

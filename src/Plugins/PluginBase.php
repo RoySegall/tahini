@@ -2,6 +2,7 @@
 
 namespace App\Plugins;
 
-abstract class PluginBase {
+abstract class PluginBase
+{
 
 }

@@ -5,15 +5,16 @@ namespace App\Entity;
 /**
  * Base entity.
  */
-abstract class AbstractEntity {
+abstract class AbstractEntity
+{
 
-  protected $mapper = [];
+    protected $mapper = [];
 
   /**
    * @return array
    */
-  public function getMapper() {
-    return $this->mapper;
-  }
-
+    public function getMapper()
+    {
+        return $this->mapper;
+    }
 }
