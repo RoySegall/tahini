@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
-use App\Services\TaliazAccessToken;
-use App\Services\TaliazUser;
+use App\Services\TahiniAccessToken;
+use App\Services\TahiniUser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,16 +14,16 @@ class UserGenerateAccessTokenCommand extends Command {
   protected static $defaultName = 'user:generate-access-token';
 
   /**
-   * @var TaliazAccessToken
+   * @var TahiniAccessToken
    */
   protected $TaliazAccessToken;
 
   /**
-   * @var TaliazUser
+   * @var TahiniUser
    */
   protected $TaliazUser;
 
-  public function __construct(?string $name = null, TaliazUser $taliaz_user, TaliazAccessToken $taliaz_access_token) {
+  public function __construct(?string $name = null, TahiniUser $taliaz_user, TahiniAccessToken $taliaz_access_token) {
     parent::__construct($name);
 
     $this->TaliazUser = $taliaz_user;

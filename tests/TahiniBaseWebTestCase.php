@@ -2,13 +2,12 @@
 
 namespace App\Tests;
 
-use App\Entity\Personal\User;
+use App\Entity\User;
 use App\Plugins\Authentication;
-use App\Services\TaliazAccessToken;
-use App\Services\TaliazDoctrine;
-use App\Services\TaliazOldProcessor;
-use App\Services\TaliazUser;
-use App\Services\TaliazValidator;
+use App\Services\TahiniAccessToken;
+use App\Services\TahiniDoctrine;
+use App\Services\TahiniUser;
+use App\Services\TahiniValidator;
 use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -19,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package App\Tests
  */
-class TaliazBaseWebTestCase extends WebTestCase {
+class TahiniBaseWebTestCase extends WebTestCase {
 
   public function setUp() {
     parent::setUp();
@@ -48,7 +47,7 @@ class TaliazBaseWebTestCase extends WebTestCase {
     $user->email = 'dummy' . microtime() . '@example.com';
 
     if ($create_user) {
-      $this->getTaliazUser()->createUser($user);
+      $this->getTahiniUser()->createUser($user);
     }
 
     return $user;
@@ -73,30 +72,21 @@ class TaliazBaseWebTestCase extends WebTestCase {
   }
 
   /**
-   * Get taliaz old processor.
-   *
-   * @return TaliazOldProcessor
-   */
-  protected function getTaliazOldProcessor() : TaliazOldProcessor {
-    return $this->getContainer()->get('App\Services\TaliazOldProcessor');
-  }
-
-  /**
    * Get the validator service.
    *
-   * @return TaliazValidator
+   * @return TahiniValidator
    */
-  protected function getTaliazValidator(): TaliazValidator {
-    return $this->getContainer()->get('App\Services\TaliazValidator');
+  protected function getTahiniValidator(): TahiniValidator {
+    return $this->getContainer()->get('App\Services\TahiniValidator');
   }
 
   /**
    * Get the doctrine service.
    *
-   * @return TaliazDoctrine
+   * @return TahiniDoctrine
    */
-  protected function getTaliazDoctrine() : TaliazDoctrine {
-    return $this->getContainer()->get('App\Services\TaliazDoctrine');
+  protected function getTahiniDoctrine() : TahiniDoctrine {
+    return $this->getContainer()->get('App\Services\TahiniDoctrine');
   }
 
   /**
@@ -112,19 +102,19 @@ class TaliazBaseWebTestCase extends WebTestCase {
   /**
    * Get the user service.
    *
-   * @return TaliazUser
+   * @return TahiniUser
    */
-  protected function getTaliazUser() : TaliazUser {
-    return $this->getContainer()->get('App\Services\TaliazUser');
+  protected function getTahiniUser() : TahiniUser {
+    return $this->getContainer()->get('App\Services\TahiniUser');
   }
 
   /**
    * Get the access token service.
    *
-   * @return TaliazAccessToken
+   * @return TahiniAccessToken
    */
-  public function getTaliazAccessToken() : TaliazAccessToken {
-    return $this->getContainer()->get('App\Services\TaliazAccessToken');
+  public function getTahiniAccessToken() : TahiniAccessToken {
+    return $this->getContainer()->get('App\Services\TahiniAccessToken');
   }
 
   /**

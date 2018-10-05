@@ -3,20 +3,20 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Personal\User;
-use App\Tests\TaliazBaseWebTestCase;
+use App\Tests\TahiniBaseWebTestCase;
 
-class TaliazUserTest extends TaliazBaseWebTestCase {
+class TahiniUserTest extends TahiniBaseWebTestCase {
 
   /**
    * Testing the user registration.
    */
   public function testUserRegistration() {
     $user = new User();
-    $first_validation = $this->getTaliazValidator()->validate($user, true);
+    $first_validation = $this->getTahiniValidator()->validate($user, true);
 
     // Making sure the thrown error is what the validator should be.
     try {
-      $this->getTaliazUser()->createUser($user);
+      $this->getTahiniUser()->createUser($user);
     } catch (\ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException $e) {
       $this->assertEquals($first_validation, $e);
     }
@@ -27,7 +27,7 @@ class TaliazUserTest extends TaliazBaseWebTestCase {
     $user->type = 'app';
     $user->email = 'dummy' . time() . '@example.com';
 
-    $user = $this->getTaliazUser()->createUser($user);
+    $user = $this->getTahiniUser()->createUser($user);
 
     $this->assertNotFalse($user->id);
   }
@@ -39,7 +39,7 @@ class TaliazUserTest extends TaliazBaseWebTestCase {
     $user = new User();
     $user->setPassword('text');
     $this->assertEquals('text', $user->getPassword());
-    $this->assertNotEquals($this->getTaliazUser()->hashPassword('text'), 'text');
+    $this->assertNotEquals($this->getTahiniUser()->hashPassword('text'), 'text');
   }
 
   /**
@@ -49,10 +49,10 @@ class TaliazUserTest extends TaliazBaseWebTestCase {
     $user = $this->createUser();
 
     // Trying to find a user by the email just to make sure we will fail.
-    $this->assertNull($this->getTaliazUser()->findUserByUsername($user->email));
+    $this->assertNull($this->getTahiniUser()->findUserByUsername($user->email));
 
     // Find the user by the name. This time make sure we get the user.
-    $found_user = $this->getTaliazUser()->findUserByUsername($user->username);
+    $found_user = $this->getTahiniUser()->findUserByUsername($user->username);
     $this->assertEquals($found_user, $user);
   }
 
@@ -63,10 +63,10 @@ class TaliazUserTest extends TaliazBaseWebTestCase {
     $user = $this->createUser();
 
     // Trying to find a user the name just to make sure we will fail.
-    $this->assertNull($this->getTaliazUser()->findUserByMail($user->username));
+    $this->assertNull($this->getTahiniUser()->findUserByMail($user->username));
 
     // Get the user by the email.
-    $found_user = $this->getTaliazUser()->findUserByMail($user->email);
+    $found_user = $this->getTahiniUser()->findUserByMail($user->email);
     $this->assertEquals($user, $found_user);
   }
 
@@ -76,12 +76,12 @@ class TaliazUserTest extends TaliazBaseWebTestCase {
   public function testUserUpdate() {
     $user = $this->createUser();
 
-    $this->assertNull($this->getTaliazUser()->findUserByMail('pizza@example.com'));
+    $this->assertNull($this->getTahiniUser()->findUserByMail('pizza@example.com'));
 
     $user->email = 'pizza@example.com';
-    $this->getTaliazUser()->updateUser($user);
+    $this->getTahiniUser()->updateUser($user);
 
-    $this->assertNotNull($this->getTaliazUser()->findUserByMail('pizza@example.com'));
+    $this->assertNotNull($this->getTahiniUser()->findUserByMail('pizza@example.com'));
   }
 
   /**
@@ -89,8 +89,8 @@ class TaliazUserTest extends TaliazBaseWebTestCase {
    */
   public function testUserDelete() {
     $user = $this->createUser();
-    $this->getTaliazUser()->deleteUser($user);
-    $this->assertNull($this->getTaliazUser()->findUserByMail($user->email));
+    $this->getTahiniUser()->deleteUser($user);
+    $this->assertNull($this->getTahiniUser()->findUserByMail($user->email));
   }
 
 }

@@ -2,9 +2,9 @@
 
 namespace App\Command;
 
-use App\Entity\Personal\AccessToken;
-use App\Services\TaliazAccessToken;
-use App\Services\TaliazDoctrine;
+use App\Entity\AccessToken;
+use App\Services\TahiniAccessToken;
+use App\Services\TahiniDoctrine;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,16 +17,16 @@ class UserPruneTokensCommand extends Command
   protected static $defaultName = 'user:prune-tokens';
 
   /**
-   * @var TaliazDoctrine
+   * @var TahiniDoctrine
    */
   protected $TaliazDoctrine;
 
   /**
-   * @var TaliazAccessToken
+   * @var TahiniAccessToken
    */
   protected $TaliazAccessToken;
 
-  public function __construct(?string $name = null, TaliazDoctrine $taliaz_doctrine, TaliazAccessToken $taliaz_access_token) {
+  public function __construct(?string $name = null, TahiniDoctrine $taliaz_doctrine, TahiniAccessToken $taliaz_access_token) {
     parent::__construct($name);
 
     $this->TaliazDoctrine = $taliaz_doctrine;

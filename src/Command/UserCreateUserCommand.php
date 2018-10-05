@@ -2,9 +2,9 @@
 
 namespace App\Command;
 
-use App\Entity\Personal\User;
-use App\Services\TaliazUser;
-use App\Services\TaliazValidator;
+use App\Entity\User;
+use App\Services\TahiniUser;
+use App\Services\TahiniValidator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,16 +17,16 @@ class UserCreateUserCommand extends Command {
   protected static $defaultName = 'user:create-user';
 
   /**
-   * @var TaliazUser
+   * @var TahiniUser
    */
   protected $TaliazUser;
 
   /**
-   * @var TaliazValidator
+   * @var TahiniValidator
    */
   protected $TaliazValidator;
 
-  public function __construct(?string $name = null, TaliazUser $taliaz_user, TaliazValidator $taliaz_validator) {
+  public function __construct(?string $name = null, TahiniUser $taliaz_user, TahiniValidator $taliaz_validator) {
     parent::__construct($name);
 
     $this->TaliazUser = $taliaz_user;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Personal;
+namespace App\Entity;
 
 use App\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;

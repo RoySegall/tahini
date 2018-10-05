@@ -5,8 +5,8 @@ namespace App\Command;
 use App\Entity\Personal\AccessToken;
 use App\Entity\Personal\User;
 use App\Plugins\Authentication;
-use App\Services\TaliazAccessToken;
-use App\Services\TaliazUser;
+use App\Services\TahiniAccessToken;
+use App\Services\TahiniUser;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
@@ -19,7 +19,7 @@ class AppSandboxCommand extends Command
   protected static $defaultName = 'app:sandbox';
 
   /**
-   * @var TaliazUser
+   * @var TahiniUser
    */
   protected $taliazUser;
 
@@ -31,7 +31,7 @@ class AppSandboxCommand extends Command
   protected $entityManager;
 
 
-  public function __construct(?string $name = null, TaliazUser $taliazUser, TaliazAccessToken $accessToken, \Doctrine\Common\Persistence\ManagerRegistry $registry) {
+  public function __construct(?string $name = null, TahiniUser $taliazUser, TahiniAccessToken $accessToken, \Doctrine\Common\Persistence\ManagerRegistry $registry) {
     parent::__construct($name);
 
     $this->taliazUser = $taliazUser;

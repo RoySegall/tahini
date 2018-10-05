@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Entity\Personal;
+namespace App\Entity;
 
 use App\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
+use \Doctrine\ORM\Mapping\OneToOne as OneToOne;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource
  * @ORM\Entity
  */
-class Role extends AbstractEntity {
+class RoleAssignment extends AbstractEntity {
 
   /**
    * @var int The id of the user.
@@ -29,16 +30,18 @@ class Role extends AbstractEntity {
    * @var string The username.
    *
    * @Assert\NotNull()
-   * @ORM\Column(type="string", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
+   * @OneToOne(targetEntity="\App\Entity\Personal\Role")
    */
-  public $name;
+  public $roleId;
 
   /**
    * @var string The description.
    *
    * @Assert\NotNull()
-   * @ORM\Column(type="string", nullable=false)
+   * @ORM\Column(type="integer", nullable=false)
+   * @OneToOne(targetEntity="\App\Entity\Personal\User")
    */
-  public $description;
+  public $userId;
 
 }

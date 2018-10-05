@@ -3,10 +3,10 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Personal\AccessToken;
-use App\Services\TaliazAccessToken;
-use App\Tests\TaliazBaseWebTestCase;
+use App\Services\TahiniAccessToken;
+use App\Tests\TahiniBaseWebTestCase;
 
-class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
+class TahiniAccessTokenTest extends TahiniBaseWebTestCase {
 
   /**
    * Testing creation of an access token.
@@ -16,7 +16,7 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
   public function testCreateAccessToken() {
     // Making sure the createAccessToken creates an access token.
     $user = $this->createUser(false);
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($user);
+    $access_token = $this->getTahiniAccessToken()->createAccessToken($user);
 
     $this->assertNotEmpty($user->id);
     $this->assertEquals($user->id, $access_token->user->id);
@@ -30,7 +30,7 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
   public function testGetAccessToken() {
     // Making sure the getAccessToken returns a token.
     $user = $this->createUser(false);
-    $access_token = $this->getTaliazAccessToken()->getAccessToken($user);
+    $access_token = $this->getTahiniAccessToken()->getAccessToken($user);
 
     $this->assertNotEmpty($user->id);
     $this->assertEquals($user->id, $access_token->user->id);
@@ -44,10 +44,10 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
     $one_user = $this->createUser(false);
     $second_user = $this->createUser(true);
 
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($one_user);
+    $access_token = $this->getTahiniAccessToken()->createAccessToken($one_user);
 
-    $this->assertFalse($this->getTaliazAccessToken()->hasAccessToken($second_user));
-    $this->assertEquals($access_token, $this->getTaliazAccessToken()->hasAccessToken($one_user));
+    $this->assertFalse($this->getTahiniAccessToken()->hasAccessToken($second_user));
+    $this->assertEquals($access_token, $this->getTahiniAccessToken()->hasAccessToken($one_user));
   }
 
   /**
@@ -56,21 +56,21 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
   public function testRefreshAccessToken() {
     // Get some basic elements.
     $user = $this->createUser(false);
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($user);
+    $access_token = $this->getTahiniAccessToken()->createAccessToken($user);
 
     // Save the ID for later.
     $id = $access_token->id;
 
     // Making sure the old token still exists and create a new one.
-    $this->assertNotEmpty($this->getTaliazDoctrine()->getAccessTokenRepository()->find($id));
-    $new_access_token = $this->getTaliazAccessToken()->refreshAccessToken($access_token->refresh_token);
+    $this->assertNotEmpty($this->getTahiniDoctrine()->getAccessTokenRepository()->find($id));
+    $new_access_token = $this->getTahiniAccessToken()->refreshAccessToken($access_token->refresh_token);
 
     // Checking there is a new token in town.
     $this->assertNotEquals($new_access_token->id, $id);
 
     // Making sure we can load the new token and not the old one.
-    $this->assertEmpty($this->getTaliazDoctrine()->getAccessTokenRepository()->find($id));
-    $this->assertNotEmpty($this->getTaliazDoctrine()->getAccessTokenRepository()->find($new_access_token->id));
+    $this->assertEmpty($this->getTahiniDoctrine()->getAccessTokenRepository()->find($id));
+    $this->assertNotEmpty($this->getTahiniDoctrine()->getAccessTokenRepository()->find($new_access_token->id));
   }
 
   /**
@@ -78,8 +78,8 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
    */
   public function testLoadByAccessToken() {
     $user = $this->createUser(false);
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($user);
-    $this->assertEquals($access_token, $this->getTaliazAccessToken()->loadByAccessToken($access_token->access_token));
+    $access_token = $this->getTahiniAccessToken()->createAccessToken($user);
+    $this->assertEquals($access_token, $this->getTahiniAccessToken()->loadByAccessToken($access_token->access_token));
   }
 
   /**
@@ -89,49 +89,49 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
     $request = new \Symfony\Component\HttpFoundation\Request();
 
     // Making an request with a bad access token.
-    $request->headers->set(TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY, time());
-    $bad_access_token = $this->getTaliazAccessToken()->getAccessTokenFromRequest($request);
+    $request->headers->set(TahiniAccessToken::ACCESS_TOKEN_HEADER_KEY, time());
+    $bad_access_token = $this->getTahiniAccessToken()->getAccessTokenFromRequest($request);
 
     $this->assertNull($bad_access_token->id);
 
     // Create a new access token and make sure we get the access token via the
     // request.
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($this->createUser(false));
-    $request->headers->set(TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY, $access_token->access_token);
-    $this->assertEquals($access_token, $this->getTaliazAccessToken()->getAccessTokenFromRequest($request));
+    $access_token = $this->getTahiniAccessToken()->createAccessToken($this->createUser(false));
+    $request->headers->set(TahiniAccessToken::ACCESS_TOKEN_HEADER_KEY, $access_token->access_token);
+    $this->assertEquals($access_token, $this->getTahiniAccessToken()->getAccessTokenFromRequest($request));
   }
 
   /**
    * Testing the access token is revoked from the DB.
    */
   public function testRevokeAccessToken() {
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($this->createUser(false));
+    $access_token = $this->getTahiniAccessToken()->createAccessToken($this->createUser(false));
 
     $id = $access_token->id;
 
     // Making sure the old token still exists.
-    $this->assertNotEmpty($this->getTaliazDoctrine()->getAccessTokenRepository()->find($id));
-    $this->getTaliazAccessToken()->revokeAccessToken($access_token);
-    $this->assertEmpty($this->getTaliazDoctrine()->getAccessTokenRepository()->find($id));
+    $this->assertNotEmpty($this->getTahiniDoctrine()->getAccessTokenRepository()->find($id));
+    $this->getTahiniAccessToken()->revokeAccessToken($access_token);
+    $this->assertEmpty($this->getTahiniDoctrine()->getAccessTokenRepository()->find($id));
   }
 
   /**
    * Testing that the string of the access token is removed from the DB.
    */
   public function testClearAccessToken() {
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($this->createUser(false));
+    $access_token = $this->getTahiniAccessToken()->createAccessToken($this->createUser(false));
 
     $id = $access_token->id;
 
     // Get the access token.
     /** @var AccessToken $tokens */
-    $db_token = $this->getTaliazDoctrine()->getAccessTokenRepository()->find($id);
+    $db_token = $this->getTahiniDoctrine()->getAccessTokenRepository()->find($id);
     $this->assertEquals($db_token->access_token, $access_token->access_token);
 
     // Clear the access token for the DB.
-    $this->getTaliazAccessToken()->clearAccessToken($access_token);
+    $this->getTahiniAccessToken()->clearAccessToken($access_token);
 
-    $db_token = $this->getTaliazDoctrine()->getAccessTokenRepository()->find($id);
+    $db_token = $this->getTahiniDoctrine()->getAccessTokenRepository()->find($id);
     $this->assertNull($db_token->access_token);
   }
 
@@ -139,7 +139,7 @@ class TaliazAccessTokenTest extends TaliazBaseWebTestCase {
    * Testing the expires of the access token.
    */
   public function testGetAccessTokenExpires() {
-    $this->assertEquals($this->getTaliazAccessToken()->getAccessTokenExpires(), 86400);
+    $this->assertEquals($this->getTahiniAccessToken()->getAccessTokenExpires(), 86400);
   }
 
 }

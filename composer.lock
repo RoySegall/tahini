@@ -18,7 +18,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/api-platform/api-pack/zipball/33ade8a1dc23868828788fe1bf3e54291ce54843",
                 "reference": "33ade8a1dc23868828788fe1bf3e54291ce54843",
-                "shasum": ""
+                "shasu": ""
             },
             "require": {
                 "api-platform/core": "^2.1",

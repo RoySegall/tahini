@@ -19,7 +19,7 @@ namespace App\Services;
  *
  * That's it! pretty easy, no?
  */
-class TaliazDoctrine {
+class TahiniDoctrine {
 
   protected $doctrine;
 
@@ -34,26 +34,19 @@ class TaliazDoctrine {
   }
 
   /**
-   * @return \Doctrine\Common\Persistence\ObjectRepository
-   */
-  public function getJobProcessRepository() : \Doctrine\Common\Persistence\ObjectRepository {
-    return $this->doctrine->getRepository(\App\Entity\Main\JobProcess::class, 'default');
-  }
-
-  /**
    * Get the user repository object.
    *
    * @return \Doctrine\Common\Persistence\ObjectRepository
    */
   public function getUserRepository() : \Doctrine\Common\Persistence\ObjectRepository {
-    return $this->doctrine->getRepository(\App\Entity\Personal\User::class,'personal');
+    return $this->doctrine->getRepository(\App\Entity\User::class);
   }
 
   /**
    * @return \Doctrine\Common\Persistence\ObjectRepository
    */
   public function getAccessTokenRepository() : \Doctrine\Common\Persistence\ObjectRepository {
-    return $this->doctrine->getRepository(\App\Entity\Personal\AccessToken::class, 'personal');
+    return $this->doctrine->getRepository(\App\Entity\AccessToken::class);
   }
 
 }

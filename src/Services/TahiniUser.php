@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use ApiPlatform\Core\Validator\Exception\ValidationException;
-use App\Entity\Personal\User;
+use App\Entity\User;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -15,10 +15,10 @@ use Symfony\Component\Validator\ConstraintViolationList;
  *
  * @package App\Services
  */
-class TaliazUser {
+class TahiniUser {
 
   /**
-   * @var TaliazDoctrine
+   * @var TahiniDoctrine
    */
   protected $doctrine;
 
@@ -28,7 +28,7 @@ class TaliazUser {
   protected $encoder;
 
   /**
-   * @var TaliazValidator
+   * @var TahiniValidator
    */
   protected $taliazValidator;
 
@@ -40,24 +40,24 @@ class TaliazUser {
   /**
    * TaliazUser constructor.
    *
-   * @param TaliazDoctrine $taliaz_doctrine
+   * @param TahiniDoctrine $taliaz_doctrine
    *  The taliaz doctrine service.
    * @param UserPasswordEncoderInterface $encoder
    *  The password encoder.
-   * @param TaliazValidator $taliaz_validator
+   * @param TahiniValidator $taliaz_validator
    *  The taliaz validator service.
    * @param ManagerRegistry $registry
    */
   public function __construct(
-    TaliazDoctrine $taliaz_doctrine,
+    TahiniDoctrine $taliaz_doctrine,
     UserPasswordEncoderInterface $encoder,
-    TaliazValidator $taliaz_validator,
+    TahiniValidator $taliaz_validator,
     ManagerRegistry $registry
   ) {
     $this->doctrine = $taliaz_doctrine;
     $this->encoder = $encoder;
     $this->taliazValidator = $taliaz_validator;
-    $this->doctrineManager = $registry->getManager('personal');
+    $this->doctrineManager = $registry->getManager();
   }
 
   /**

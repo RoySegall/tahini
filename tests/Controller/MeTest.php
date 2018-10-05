@@ -3,36 +3,36 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Personal\AccessToken;
-use App\Tests\TaliazBaseWebTestCase;
+use App\Tests\TahiniBaseWebTestCase;
 
 /**
  * Testing login controller.
  *
  * @package App\Tests\Controller
  */
-class MeTest extends TaliazBaseWebTestCase {
+class MeTest extends TahiniBaseWebTestCase {
 
   /**
    * Testing that the endpoint returns the user object.
    */
   public function testMe() {
     // Create a user and an access token.
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($this->createUser(false));
+    $access_token = $this->getTahiniAccessToken()->createAccessToken($this->createUser(false));
 
     // Checking the me endpoint.
     $client = static::createClient();
-    $client->request('GET', '/api/me', array(), array(), array('HTTP_' . \App\Services\TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY => 'a'));
+    $client->request('GET', '/api/me', array(), array(), array('HTTP_' . \App\Services\TahiniAccessToken::ACCESS_TOKEN_HEADER_KEY => 'a'));
 
     $this->assertEquals($client->getResponse()->getContent(), '{"message":"You are not valid. Try again later."}');
 
     $client = static::createClient();
-    $client->request('GET', '/api/me', array(), array(), array('HTTP_' . \App\Services\TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY => $access_token->access_token));
+    $client->request('GET', '/api/me', array(), array(), array('HTTP_' . \App\Services\TahiniAccessToken::ACCESS_TOKEN_HEADER_KEY => $access_token->access_token));
 
     $decoded_request = json_decode($client->getResponse()->getContent());
 
     $this->assertEquals($decoded_request->id, $access_token->user->id);
 
-    $access_token = $this->getTaliazAccessToken()->createAccessToken($this->createUser(false));
+    $access_token = $this->getTahiniAccessToken()->createAccessToken($this->createUser(false));
 
     // Set the token as un-valid.
     $entity_manager = $this->getDoctrine()->getManager('personal');
@@ -45,7 +45,7 @@ class MeTest extends TaliazBaseWebTestCase {
 
     // Check again.
     $client = static::createClient();
-    $client->request('GET', '/api/me', array(), array(), array('HTTP_' . \App\Services\TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY => $access_token->access_token));
+    $client->request('GET', '/api/me', array(), array(), array('HTTP_' . \App\Services\TahiniAccessToken::ACCESS_TOKEN_HEADER_KEY => $access_token->access_token));
     $this->assertEquals($client->getResponse()->getContent(), '{"message":"You are not valid. Try again later."}');
   }
 }

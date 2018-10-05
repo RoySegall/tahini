@@ -3,13 +3,10 @@
 namespace App\Controller\User;
 
 use App\Controller\AbstractTaiazController;
-use App\Entity\Main\JobProcess;
-use App\Repository\JobProcessRepository;
-use App\Services\TaliazAccessToken;
-use App\Services\TaliazDoctrine;
-use App\Services\TaliazOldProcessor;
-use App\Services\TaliazUser;
-use App\Services\TaliazValidator;
+use App\Services\TahiniAccessToken;
+use App\Services\TahiniDoctrine;
+use App\Services\TahiniUser;
+use App\Services\TahiniValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,14 +26,14 @@ class Login extends AbstractTaiazController {
    *
    * @param Request $request
    *  The request service.
-   * @param TaliazUser $taliaz_user
+   * @param TahiniUser $taliaz_user
    *  The taliaz user service.
-   * @param TaliazAccessToken $taliazAccessToken
+   * @param TahiniAccessToken $taliazAccessToken
    *  The taliaz access token service.
    *
    * @return JsonResponse
    */
-  public function loginController(Request $request, TaliazUser $taliaz_user, TaliazAccessToken $taliazAccessToken) {
+  public function loginController(Request $request, TahiniUser $taliaz_user, TahiniAccessToken $taliazAccessToken) {
     if (!$payload = $this->processPayload($request)) {
       return $this->error("The payload is not correct.", Response::HTTP_BAD_REQUEST);
     }
@@ -83,12 +80,12 @@ class Login extends AbstractTaiazController {
    *
    * @param Request $request
    *  The request service.
-   * @param TaliazAccessToken $taliazAccessToken
+   * @param TahiniAccessToken $taliazAccessToken
    *  The taliaz access token service.
    *
    * @return JsonResponse
    */
-  public function refreshToken(Request $request, TaliazAccessToken $taliazAccessToken) {
+  public function refreshToken(Request $request, TahiniAccessToken $taliazAccessToken) {
 
     if (!$payload = $this->processPayload($request)) {
       return $this->error("The payload is not correct.", Response::HTTP_BAD_REQUEST);

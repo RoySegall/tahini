@@ -5,11 +5,11 @@ namespace App\Controller\User;
 use App\Controller\AbstractTaiazController;
 use App\Entity\Main\JobProcess;
 use App\Repository\JobProcessRepository;
-use App\Services\TaliazAccessToken;
-use App\Services\TaliazDoctrine;
+use App\Services\TahiniAccessToken;
+use App\Services\TahiniDoctrine;
 use App\Services\TaliazOldProcessor;
-use App\Services\TaliazUser;
-use App\Services\TaliazValidator;
+use App\Services\TahiniUser;
+use App\Services\TahiniValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,12 +27,12 @@ class Me extends AbstractTaiazController {
    *
    * @param Request $request
    *  The request service.
-   * @param TaliazAccessToken $taliazAccessToken
+   * @param TahiniAccessToken $taliazAccessToken
    *  The taliaz access token service.
    *
    * @return JsonResponse
    */
-  public function userDetails(Request $request, TaliazAccessToken $taliazAccessToken) {
+  public function userDetails(Request $request, TahiniAccessToken $taliazAccessToken) {
     return $this->json($taliazAccessToken->getAccessTokenFromRequest($request)->user);
   }
 

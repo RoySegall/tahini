@@ -2,14 +2,14 @@
 
 namespace App\Tests\Controller;
 
-use App\Tests\TaliazBaseWebTestCase;
+use App\Tests\TahiniBaseWebTestCase;
 
 /**
  * Testing login controller.
  *
  * @package App\Tests\Controller
  */
-class LoginTest extends TaliazBaseWebTestCase {
+class LoginTest extends TahiniBaseWebTestCase {
 
   /**
    * Testing the login controller.
@@ -46,7 +46,7 @@ class LoginTest extends TaliazBaseWebTestCase {
     $this->assertTrue($decoded_response->expires - time() > 86000);
 
     // Making sure we got the access token belongs to the user we created.
-    $this->assertEquals($user->id, $this->getTaliazAccessToken()->loadByAccessToken($decoded_response->access_token)->user->id);
+    $this->assertEquals($user->id, $this->getTahiniAccessToken()->loadByAccessToken($decoded_response->access_token)->user->id);
   }
 
   /**
@@ -64,7 +64,7 @@ class LoginTest extends TaliazBaseWebTestCase {
     $this->assertEquals($client->getResponse()->getContent(), '{"error":"The refresh token is missing"}');
 
     // Get the access token.
-    $access_token = $this->getTaliazAccessToken()->getAccessToken($this->createUser(false));
+    $access_token = $this->getTahiniAccessToken()->getAccessToken($this->createUser(false));
 
     // Refreshing the access token.
     $client = static::createClient();
@@ -72,7 +72,7 @@ class LoginTest extends TaliazBaseWebTestCase {
 
     $decoded_response = json_decode($client->getResponse()->getContent());
 
-    $new_access_token = $this->getTaliazAccessToken()->loadByAccessToken($decoded_response->access_token);
+    $new_access_token = $this->getTahiniAccessToken()->loadByAccessToken($decoded_response->access_token);
     $this->assertNotEquals($new_access_token->id, $access_token->id);
   }
 

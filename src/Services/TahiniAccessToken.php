@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Entity\Personal\AccessToken;
-use App\Entity\Personal\User;
+use App\Entity\AccessToken;
+use App\Entity\User;
 use App\Repository\AccessTokenRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Taliaz access token.
+ * Tahini access token.
  *
  * The service handle all we need with access token - finding the matching user,
  * creating an access token for user and more.
  *
  * @package App\Services
  */
-class TaliazAccessToken {
+class TahiniAccessToken {
 
   /**
    * The name of the header which holds the access token.
@@ -29,7 +29,7 @@ class TaliazAccessToken {
   const ACCESS_TOKEN_DURATION = 86400;
 
   /**
-   * @var TaliazDoctrine
+   * @var TahiniDoctrine
    */
   protected $doctrine;
 
@@ -39,7 +39,7 @@ class TaliazAccessToken {
   protected $doctrineManager;
 
   /**
-   * @var TaliazValidator
+   * @var TahiniValidator
    */
   protected $taliazValidator;
 
@@ -51,15 +51,15 @@ class TaliazAccessToken {
   /**
    * TaliazAccessToken constructor.
    *
-   * @param TaliazDoctrine $taliaz_doctrine
+   * @param TahiniDoctrine $taliaz_doctrine
    *  The taliaz doctrine service.
    * @param ManagerRegistry $registry
    *  The registry service.
-   * @param TaliazValidator $taliaz_validator
+   * @param TahiniValidator $taliaz_validator
    *  The validator service.
    * @param AccessTokenRepository $accessTokenRepository
    */
-  public function __construct(TaliazDoctrine $taliaz_doctrine, ManagerRegistry $registry, TaliazValidator $taliaz_validator, AccessTokenRepository $accessTokenRepository) {
+  public function __construct(TahiniDoctrine $taliaz_doctrine, ManagerRegistry $registry, TahiniValidator $taliaz_validator, AccessTokenRepository $accessTokenRepository) {
     $this->doctrine = $taliaz_doctrine;
     $this->doctrineManager = $registry->getManager('personal');
     $this->taliazValidator = $taliaz_validator;
@@ -75,7 +75,7 @@ class TaliazAccessToken {
    * @return AccessToken
    *  The access token object.
    */
-  public function createAccessToken(\App\Entity\Personal\User $user) : AccessToken {
+  public function createAccessToken(\App\Entity\User $user) : AccessToken {
     $access_token = new AccessToken();
 
     $access_token->expires = time() + $this->getAccessTokenExpires();
@@ -100,7 +100,7 @@ class TaliazAccessToken {
    * @return AccessToken
    *  The access token object.
    */
-  public function getAccessToken(\App\Entity\Personal\User $user, bool $unvalid_create_new = false) : AccessToken {
+  public function getAccessToken(\App\Entity\User $user, bool $unvalid_create_new = false) : AccessToken {
     /** @var AccessToken $access_token */
     if (!$access_token = $this->hasAccessToken($user)) {
       // No access token for the user. Create an access token and return it.
@@ -128,7 +128,7 @@ class TaliazAccessToken {
    *
    * @return bool
    */
-  public function hasAccessToken(\App\Entity\Personal\User $user) {
+  public function hasAccessToken(\App\Entity\User $user) {
 
     if ($access_token = $this->doctrine->getAccessTokenRepository()->findBy(['user' => $user->id])) {
       return reset($access_token);
@@ -226,7 +226,7 @@ class TaliazAccessToken {
    * @return integer
    */
   public function getAccessTokenExpires() {
-    return \App\Services\TaliazAccessToken::ACCESS_TOKEN_DURATION;
+    return \App\Services\TahiniAccessToken::ACCESS_TOKEN_DURATION;
   }
 
   /**

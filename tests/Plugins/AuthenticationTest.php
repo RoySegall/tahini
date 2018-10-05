@@ -2,9 +2,9 @@
 
 namespace App\Tests\Controller;
 
-use App\Tests\TaliazBaseWebTestCase;
+use App\Tests\TahiniBaseWebTestCase;
 
-class AuthenticationTest extends TaliazBaseWebTestCase {
+class AuthenticationTest extends TahiniBaseWebTestCase {
 
   /**
    * Testing the plugin discovery.

@@ -2,8 +2,8 @@
 
 namespace App\Security;
 
-use App\Entity\Personal\AccessToken;
-use App\Services\TaliazAccessToken;
+use App\Entity\AccessToken;
+use App\Services\TahiniAccessToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class TokenAuthenticator extends AbstractGuardAuthenticator {
 
   /**
-   * @var TaliazAccessToken
+   * @var TahiniAccessToken
    */
   protected $TaliazAccessToken;
 
@@ -27,9 +27,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
 
   /**
    * TokenAuthenticator constructor.
-   * @param TaliazAccessToken $taliaz_access_token
+   * @param TahiniAccessToken $taliaz_access_token
    */
-  public function __construct(TaliazAccessToken $taliaz_access_token) {
+  public function __construct(TahiniAccessToken $taliaz_access_token) {
     $this->TaliazAccessToken = $taliaz_access_token;
   }
 
@@ -80,7 +80,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
    * {@inheritdoc}
    */
   public function getCredentials(Request $request) {
-    return array('token' => $request->headers->get(\App\Services\TaliazAccessToken::ACCESS_TOKEN_HEADER_KEY));
+    return array('token' => $request->headers->get(\App\Services\TahiniAccessToken::ACCESS_TOKEN_HEADER_KEY));
   }
 
   /**

@@ -13,11 +13,6 @@ doctrine:
                 driver:   pdo_mysql
                 url: '%env(resolve:DEFAULT_DATABASE_URL)%'
                 charset:  UTF8
-            personal:
-                driver:   pdo_mysql
-                url: '%env(resolve:PERSONAL_DATABASE_URL)%'
-                charset:  UTF8
-
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         entity_managers:
@@ -28,16 +23,5 @@ doctrine:
                     Main:
                         is_bundle: false
                         type: annotation
-                        dir: '%kernel.project_dir%/src/Entity/Main'
-                        prefix: 'App\Entity\Main'
-                        alias: Main
-            personal:
-                connection: personal
-                naming_strategy: doctrine.orm.naming_strategy.underscore
-                mappings:
-                    Personal:
-                        is_bundle: false
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Entity/Personal'
-                        prefix: 'App\Entity\Personal'
-                        alias: Personal
+                        dir: '%kernel.project_dir%/src/Entity'
+                        prefix: 'App\Entity'

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity\Personal;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use \Doctrine\ORM\Mapping\Table as Table;
-use \App\Entity\Personal\User;
+use \App\Entity\Personal;
 use App\Entity\AbstractEntity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;

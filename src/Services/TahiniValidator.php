@@ -7,13 +7,13 @@ use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Entity\AbstractEntity;
 
 /**
- * Taliaz API validator service.
+ * Tahini API validator service.
  *
  * Get the entity constraints.
  *
  * @package App\Services
  */
-class TaliazValidator {
+class TahiniValidator {
 
   /**
    * @var ValidatorInterface
