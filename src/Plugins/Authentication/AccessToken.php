@@ -10,13 +10,14 @@ use App\Plugins\Annotations\Authentication;
  *   name = "Access Token",
  * )
  */
-class AccessToken extends AuthenticationPluginBase {
+class AccessToken extends AuthenticationPluginBase
+{
 
   /**
    * Making sure the user is valid.
    */
-  function validateUser() {
-    return true;
-  }
-
+    public function validateUser()
+    {
+        return true;
+    }
 }

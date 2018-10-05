@@ -19,7 +19,8 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/api/user/")
  */
-class Logout extends AbstractTaiazController {
+class Logout extends AbstractTaiazController
+{
 
   /**
    * @Route("logout", methods={"GET"})
@@ -31,9 +32,9 @@ class Logout extends AbstractTaiazController {
    *
    * @return JsonResponse
    */
-  public function revoking(Request $request, TahiniAccessToken $tahiniAccessToken) {
-    $tahiniAccessToken->revokeAccessToken($tahiniAccessToken->getAccessTokenFromRequest($request));
-    return $this->json('The access token has been removed.');
-  }
-
+    public function revoking(Request $request, TahiniAccessToken $tahiniAccessToken)
+    {
+        $tahiniAccessToken->revokeAccessToken($tahiniAccessToken->getAccessTokenFromRequest($request));
+        return $this->json('The access token has been removed.');
+    }
 }

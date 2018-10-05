@@ -77,6 +77,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "escapestudios/symfony2-coding-standard": {
+        "version": "3.4.1"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -121,6 +124,15 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "squizlabs/php_codesniffer": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "0dc9cceda799fd3a08b96987e176a261028a3709"
+        }
     },
     "symfony/asset": {
         "version": "v4.1.0"

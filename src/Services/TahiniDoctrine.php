@@ -19,9 +19,10 @@ namespace App\Services;
  *
  * That's it! pretty easy, no?
  */
-class TahiniDoctrine {
+class TahiniDoctrine
+{
 
-  protected $doctrine;
+    protected $doctrine;
 
   /**
    * TahiniDoctrine constructor.
@@ -29,24 +30,26 @@ class TahiniDoctrine {
    * @param \Doctrine\Common\Persistence\ManagerRegistry $doctrine
    *  The doctrine manager.
    */
-  public function __construct(\Doctrine\Common\Persistence\ManagerRegistry $doctrine) {
-    $this->doctrine = $doctrine;
-  }
+    public function __construct(\Doctrine\Common\Persistence\ManagerRegistry $doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
 
   /**
    * Get the user repository object.
    *
    * @return \Doctrine\Common\Persistence\ObjectRepository
    */
-  public function getUserRepository() : \Doctrine\Common\Persistence\ObjectRepository {
-    return $this->doctrine->getRepository(\App\Entity\User::class);
-  }
+    public function getUserRepository() : \Doctrine\Common\Persistence\ObjectRepository
+    {
+        return $this->doctrine->getRepository(\App\Entity\User::class);
+    }
 
   /**
    * @return \Doctrine\Common\Persistence\ObjectRepository
    */
-  public function getAccessTokenRepository() : \Doctrine\Common\Persistence\ObjectRepository {
-    return $this->doctrine->getRepository(\App\Entity\AccessToken::class);
-  }
-
+    public function getAccessTokenRepository() : \Doctrine\Common\Persistence\ObjectRepository
+    {
+        return $this->doctrine->getRepository(\App\Entity\AccessToken::class);
+    }
 }

@@ -10,12 +10,13 @@ use App\Plugins\Annotations\Authentication;
  *   name = "IP",
  * )
  */
-class IP extends AuthenticationPluginBase {
+class IP extends AuthenticationPluginBase
+{
 
   /**
    * Making sure the user is valid.
    */
-  function validateUser() {
-  }
-
+    public function validateUser()
+    {
+    }
 }

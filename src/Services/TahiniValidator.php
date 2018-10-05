@@ -13,12 +13,13 @@ use App\Entity\AbstractEntity;
  *
  * @package App\Services
  */
-class TahiniValidator {
+class TahiniValidator
+{
 
   /**
    * @var ValidatorInterface
    */
-  protected $validator;
+    protected $validator;
 
     /**
      * TahiniValidator constructor.
@@ -26,9 +27,10 @@ class TahiniValidator {
      * @param ValidatorInterface $validator
      *  The validator service.
      */
-  public function __construct(ValidatorInterface $validator) {
-    $this->validator = $validator;
-  }
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
 
   /**
    * Validating the entity object by using the constraints service.
@@ -41,35 +43,34 @@ class TahiniValidator {
    *
    * @return array|ValidationException
    */
-  public function validate(AbstractEntity $entity, bool $return_exception = false) {
-    $error_list = [];
+    public function validate(AbstractEntity $entity, bool $return_exception = false)
+    {
+        $error_list = [];
 
-    try {
-      $errors = $this->validator->validate($entity);
+        try {
+            $errors = $this->validator->validate($entity);
 
-      if (!$errors) {
-        return [];
-      }
-    } catch (ValidationException $validationException) {
+            if (!$errors) {
+                return [];
+            }
+        } catch (ValidationException $validationException) {
+            if ($return_exception) {
+                return $validationException;
+            }
 
-      if ($return_exception) {
-        return $validationException;
-      }
+            $mappers = $entity->getMapper();
 
-      $mappers = $entity->getMapper();
+            foreach ($validationException->getConstraintViolationList() as $error) {
+                $human_property = $error->getPropertyPath();
 
-      foreach ($validationException->getConstraintViolationList() as $error) {
-        $human_property = $error->getPropertyPath();
+                if (!empty($mappers[$error->getPropertyPath()])) {
+                    $human_property = $mappers[$error->getPropertyPath()];
+                }
 
-        if (!empty($mappers[$error->getPropertyPath()])) {
-          $human_property = $mappers[$error->getPropertyPath()];
+                $error_list[$human_property][] = $error->getMessage();
+            }
         }
 
-        $error_list[$human_property][] = $error->getMessage();
-      }
+        return $error_list;
     }
-
-    return $error_list;
-  }
-
 }

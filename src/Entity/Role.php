@@ -14,7 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource
  * @ORM\Entity
  */
-class Role extends AbstractEntity {
+class Role extends AbstractEntity
+{
 
   /**
    * @var int The id of the user.
@@ -23,7 +24,7 @@ class Role extends AbstractEntity {
    * @ORM\GeneratedValue
    * @ORM\Column(type="integer", options={"unsigned":true})
    */
-  public $id;
+    public $id;
 
   /**
    * @var string The username.
@@ -31,7 +32,7 @@ class Role extends AbstractEntity {
    * @Assert\NotNull()
    * @ORM\Column(type="string", nullable=false)
    */
-  public $name;
+    public $name;
 
   /**
    * @var string The description.
@@ -39,6 +40,5 @@ class Role extends AbstractEntity {
    * @Assert\NotNull()
    * @ORM\Column(type="string", nullable=false)
    */
-  public $description;
-
+    public $description;
 }
