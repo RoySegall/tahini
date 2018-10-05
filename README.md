@@ -1,4 +1,7 @@
 # Tahini
+[![Build Status](https://travis-ci.com/RoySegall/tahini.svg?branch=master)](
+https://travis-ci.com/RoySegall/tahini
+)
 
 Tahini was a a project I created in a startup I worked for. The startup has some
 finance struggles and had to fire me. The CTO was kind enough and gave me the 
