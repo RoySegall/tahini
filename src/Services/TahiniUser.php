@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
- * Taliaz user service.
+ * Tahini user service.
  *
  * The service manage all the user actions - creating, updating password.
  *
@@ -30,7 +30,7 @@ class TahiniUser {
   /**
    * @var TahiniValidator
    */
-  protected $taliazValidator;
+  protected $tahiniValidator;
 
   /**
    * @var \Doctrine\Common\Persistence\ObjectManager|object
@@ -38,25 +38,25 @@ class TahiniUser {
   protected $doctrineManager;
 
   /**
-   * TaliazUser constructor.
+   * TahiniUser constructor.
    *
-   * @param TahiniDoctrine $taliaz_doctrine
-   *  The taliaz doctrine service.
+   * @param TahiniDoctrine $tahini_doctrine
+   *  The tahini doctrine service.
    * @param UserPasswordEncoderInterface $encoder
    *  The password encoder.
-   * @param TahiniValidator $taliaz_validator
-   *  The taliaz validator service.
+   * @param TahiniValidator $tahini_validator
+   *  The tahini validator service.
    * @param ManagerRegistry $registry
    */
   public function __construct(
-    TahiniDoctrine $taliaz_doctrine,
+    TahiniDoctrine $tahini_doctrine,
     UserPasswordEncoderInterface $encoder,
-    TahiniValidator $taliaz_validator,
+    TahiniValidator $tahini_validator,
     ManagerRegistry $registry
   ) {
-    $this->doctrine = $taliaz_doctrine;
+    $this->doctrine = $tahini_doctrine;
     $this->encoder = $encoder;
-    $this->taliazValidator = $taliaz_validator;
+    $this->tahiniValidator = $tahini_validator;
     $this->doctrineManager = $registry->getManager();
   }
 
@@ -132,7 +132,7 @@ class TahiniUser {
    */
   public function createUser(User $user) {
 
-    if ($errors = $this->taliazValidator->validate($user, true)) {
+    if ($errors = $this->tahiniValidator->validate($user, true)) {
       throw $errors;
     }
 

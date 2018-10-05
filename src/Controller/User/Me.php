@@ -7,7 +7,6 @@ use App\Entity\Main\JobProcess;
 use App\Repository\JobProcessRepository;
 use App\Services\TahiniAccessToken;
 use App\Services\TahiniDoctrine;
-use App\Services\TaliazOldProcessor;
 use App\Services\TahiniUser;
 use App\Services\TahiniValidator;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,13 +26,13 @@ class Me extends AbstractTaiazController {
    *
    * @param Request $request
    *  The request service.
-   * @param TahiniAccessToken $taliazAccessToken
-   *  The taliaz access token service.
+   * @param TahiniAccessToken $tahiniAccessToken
+   *  The tahini access token service.
    *
    * @return JsonResponse
    */
-  public function userDetails(Request $request, TahiniAccessToken $taliazAccessToken) {
-    return $this->json($taliazAccessToken->getAccessTokenFromRequest($request)->user);
+  public function userDetails(Request $request, TahiniAccessToken $tahiniAccessToken) {
+    return $this->json($tahiniAccessToken->getAccessTokenFromRequest($request)->user);
   }
 
 }

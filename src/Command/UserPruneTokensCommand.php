@@ -19,18 +19,24 @@ class UserPruneTokensCommand extends Command
   /**
    * @var TahiniDoctrine
    */
-  protected $TaliazDoctrine;
+  protected $TahiniDoctrine;
 
   /**
    * @var TahiniAccessToken
    */
-  protected $TaliazAccessToken;
+  protected $TahiniAccessToken;
 
-  public function __construct(?string $name = null, TahiniDoctrine $taliaz_doctrine, TahiniAccessToken $taliaz_access_token) {
+  /**
+   * UserPruneTokensCommand constructor.
+   * @param null|string $name
+   * @param TahiniDoctrine $tahini_doctrine
+   * @param TahiniAccessToken $tahini_access_token
+   */
+  public function __construct(?string $name = null, TahiniDoctrine $tahini_doctrine, TahiniAccessToken $tahini_access_token) {
     parent::__construct($name);
 
-    $this->TaliazDoctrine = $taliaz_doctrine;
-    $this->TaliazAccessToken = $taliaz_access_token;
+    $this->TahiniDoctrine = $tahini_doctrine;
+    $this->TahiniAccessToken = $tahini_access_token;
   }
 
   protected function configure() {
@@ -41,11 +47,11 @@ class UserPruneTokensCommand extends Command
     $io = new SymfonyStyle($input, $output);
 
     /** @var AccessToken[] $tokens */
-    $tokens = $this->TaliazDoctrine->getAccessTokenRepository()->findAll();
+    $tokens = $this->TahiniDoctrine->getAccessTokenRepository()->findAll();
     $counts = 0;
     foreach ($tokens as $token) {
       if (time() > $token->expires) {
-        $this->TaliazAccessToken->clearAccessToken($token);
+        $this->TahiniAccessToken->clearAccessToken($token);
         $io->writeln('The access token for the user ' . $token->user->username . ' has been pruned from tye system');
         $counts++;
       }

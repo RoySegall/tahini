@@ -18,7 +18,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
   /**
    * @var TahiniAccessToken
    */
-  protected $TaliazAccessToken;
+  protected $TahiniAccessToken;
 
   /**
    * @var AccessToken
@@ -27,10 +27,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
 
   /**
    * TokenAuthenticator constructor.
-   * @param TahiniAccessToken $taliaz_access_token
+   * @param TahiniAccessToken $tahini_access_token
    */
-  public function __construct(TahiniAccessToken $taliaz_access_token) {
-    $this->TaliazAccessToken = $taliaz_access_token;
+  public function __construct(TahiniAccessToken $tahini_access_token) {
+    $this->TahiniAccessToken = $tahini_access_token;
   }
 
   /**
@@ -93,7 +93,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
       return null;
     }
 
-    $user = $this->TaliazAccessToken->loadByAccessToken($credentials['token'])->user;
+    $user = $this->TahiniAccessToken->loadByAccessToken($credentials['token'])->user;
 
     if (empty($user->id)) {
       return null;
@@ -107,7 +107,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator {
    */
   public function checkCredentials($credentials, UserInterface $user) {
     // todo: use the authentication plugin.
-    $this->token = $this->TaliazAccessToken->loadByAccessToken($credentials['token']);
+    $this->token = $this->TahiniAccessToken->loadByAccessToken($credentials['token']);
 
     $user = $this->token->user;
 

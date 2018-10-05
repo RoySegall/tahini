@@ -41,7 +41,7 @@ class TahiniAccessToken {
   /**
    * @var TahiniValidator
    */
-  protected $taliazValidator;
+  protected $tahiniValidator;
 
   /**
    * @var AccessTokenRepository
@@ -49,20 +49,20 @@ class TahiniAccessToken {
   protected $accessTokenRepository;
 
   /**
-   * TaliazAccessToken constructor.
+   * TahiniAccessToken constructor.
    *
-   * @param TahiniDoctrine $taliaz_doctrine
-   *  The taliaz doctrine service.
+   * @param TahiniDoctrine $tahini_doctrine
+   *  The tahini doctrine service.
    * @param ManagerRegistry $registry
    *  The registry service.
-   * @param TahiniValidator $taliaz_validator
+   * @param TahiniValidator $tahini_validator
    *  The validator service.
    * @param AccessTokenRepository $accessTokenRepository
    */
-  public function __construct(TahiniDoctrine $taliaz_doctrine, ManagerRegistry $registry, TahiniValidator $taliaz_validator, AccessTokenRepository $accessTokenRepository) {
-    $this->doctrine = $taliaz_doctrine;
-    $this->doctrineManager = $registry->getManager('personal');
-    $this->taliazValidator = $taliaz_validator;
+  public function __construct(TahiniDoctrine $tahini_doctrine, ManagerRegistry $registry, TahiniValidator $tahini_validator, AccessTokenRepository $accessTokenRepository) {
+    $this->doctrine = $tahini_doctrine;
+    $this->doctrineManager = $registry->getManager();
+    $this->tahiniValidator = $tahini_validator;
     $this->accessTokenRepository = $accessTokenRepository;
   }
 

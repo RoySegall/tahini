@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Personal\AccessToken;
+use App\Entity\AccessToken;
 use App\Services\TahiniAccessToken;
 use App\Tests\TahiniBaseWebTestCase;
 

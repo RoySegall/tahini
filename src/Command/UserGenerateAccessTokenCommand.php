@@ -11,23 +11,24 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class UserGenerateAccessTokenCommand extends Command {
+
   protected static $defaultName = 'user:generate-access-token';
 
   /**
    * @var TahiniAccessToken
    */
-  protected $TaliazAccessToken;
+  protected $TahiniAccessToken;
 
   /**
    * @var TahiniUser
    */
-  protected $TaliazUser;
+  protected $TahiniUser;
 
-  public function __construct(?string $name = null, TahiniUser $taliaz_user, TahiniAccessToken $taliaz_access_token) {
+  public function __construct(?string $name = null, TahiniUser $tahini_user, TahiniAccessToken $tahini_access_token) {
     parent::__construct($name);
 
-    $this->TaliazUser = $taliaz_user;
-    $this->TaliazAccessToken = $taliaz_access_token;
+    $this->TahiniUser = $tahini_user;
+    $this->TahiniAccessToken = $tahini_access_token;
   }
 
   protected function configure() {
@@ -39,12 +40,12 @@ class UserGenerateAccessTokenCommand extends Command {
 
     $username = $io->askQuestion(new Question('Enter the user name'));
 
-    if (!$user = $this->TaliazUser->findUserByUsername($username)) {
+    if (!$user = $this->TahiniUser->findUserByUsername($username)) {
       $io->error('There is no user with that name');
       return;
     }
 
-    $access_token = $this->TaliazAccessToken->getAccessToken($user, true);
+    $access_token = $this->TahiniAccessToken->getAccessToken($user, true);
 
     d($access_token);
   }

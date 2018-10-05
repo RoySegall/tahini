@@ -16,14 +16,11 @@ class HomeController extends AbstractController {
   /**
    * @Route("/", methods={"GET"})
    *
-   * @param Request $request
-   *  The request object.
-   *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *  Return a json info about the system.
    */
-  public function index(Request $request) {
-    return $this->json(['title' => 'Taliaz Health', 'Sys Admin' => ['name' => 'Sagee Lupin', 'email' => 'tech.team@taliazhealth.com',], 'version' => self::VERSION, 'env' => getenv('APP_ENV'), 'ip_address' => $request->getClientIp(),]);
+  public function index() {
+    return $this->json(['message' => 'Welcome!']);
   }
 
 }

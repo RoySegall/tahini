@@ -19,18 +19,24 @@ class UserCreateUserCommand extends Command {
   /**
    * @var TahiniUser
    */
-  protected $TaliazUser;
+  protected $TahiniUser;
 
   /**
    * @var TahiniValidator
    */
-  protected $TaliazValidator;
+  protected $TahiniValidator;
 
-  public function __construct(?string $name = null, TahiniUser $taliaz_user, TahiniValidator $taliaz_validator) {
+  /**
+   * UserCreateUserCommand constructor.
+   * @param null|string $name
+   * @param TahiniUser $tahini_user
+   * @param TahiniValidator $tahini_validator
+   */
+  public function __construct(?string $name = null, TahiniUser $tahini_user, TahiniValidator $tahini_validator) {
     parent::__construct($name);
 
-    $this->TaliazUser = $taliaz_user;
-    $this->TaliazValidator = $taliaz_validator;
+    $this->TahiniUser = $tahini_user;
+    $this->TahiniValidator = $tahini_validator;
   }
 
   protected function configure() {
@@ -56,11 +62,11 @@ class UserCreateUserCommand extends Command {
     $user->type = $type;
     $user->roles = [1];
 
-    if ($error = $this->TaliazValidator->validate($user)) {
+    if ($error = $this->TahiniValidator->validate($user)) {
       d($error);
       return;
     }
 
-    $this->TaliazUser->createUser($user);
+    $this->TahiniUser->createUser($user);
   }
 }

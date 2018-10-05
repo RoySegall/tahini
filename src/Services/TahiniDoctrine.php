@@ -3,7 +3,7 @@
 namespace App\Services;
 
 /**
- * Taliaz doctrine service.
+ * Tahini doctrine service.
  *
  * Since our entities can be located in different DBs, this service wrap for us
  * the way we get the repository of the entity. For example, each time we need
@@ -15,7 +15,7 @@ namespace App\Services;
  * code need to be context aware. Pretty sucks :\
  *
  * In order to use this service for get the job process we need to do this:
- *  $taliaz_doctrine->getJobProcessRepository()
+ *  $tahini_doctrine->getJobProcessRepository()
  *
  * That's it! pretty easy, no?
  */
@@ -24,7 +24,7 @@ class TahiniDoctrine {
   protected $doctrine;
 
   /**
-   * TaliazDoctrine constructor.
+   * TahiniDoctrine constructor.
    *
    * @param \Doctrine\Common\Persistence\ManagerRegistry $doctrine
    *  The doctrine manager.

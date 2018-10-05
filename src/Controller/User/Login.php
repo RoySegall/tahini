@@ -26,14 +26,14 @@ class Login extends AbstractTaiazController {
    *
    * @param Request $request
    *  The request service.
-   * @param TahiniUser $taliaz_user
-   *  The taliaz user service.
-   * @param TahiniAccessToken $taliazAccessToken
-   *  The taliaz access token service.
+   * @param TahiniUser $tahini_user
+   *  The tahini user service.
+   * @param TahiniAccessToken $tahiniAccessToken
+   *  The tahini access token service.
    *
    * @return JsonResponse
    */
-  public function loginController(Request $request, TahiniUser $taliaz_user, TahiniAccessToken $taliazAccessToken) {
+  public function loginController(Request $request, TahiniUser $tahini_user, TahiniAccessToken $tahiniAccessToken) {
     if (!$payload = $this->processPayload($request)) {
       return $this->error("The payload is not correct.", Response::HTTP_BAD_REQUEST);
     }
@@ -54,11 +54,11 @@ class Login extends AbstractTaiazController {
       return $this->error("The payload is not correct", Response::HTTP_BAD_REQUEST);
     }
 
-    if (!$user = $taliaz_user->findUserByUsername($username, $password)) {
+    if (!$user = $tahini_user->findUserByUsername($username, $password)) {
       return $this->error("Username and password are in correct.");
     }
 
-    $access_token = $taliazAccessToken->getAccessToken($user);
+    $access_token = $tahiniAccessToken->getAccessToken($user);
 
     if (empty($access_token->access_token)) {
       // It seems that we got an empty access token. This could be due to the
@@ -80,12 +80,12 @@ class Login extends AbstractTaiazController {
    *
    * @param Request $request
    *  The request service.
-   * @param TahiniAccessToken $taliazAccessToken
-   *  The taliaz access token service.
+   * @param TahiniAccessToken $tahiniAccessToken
+   *  The tahini access token service.
    *
    * @return JsonResponse
    */
-  public function refreshToken(Request $request, TahiniAccessToken $taliazAccessToken) {
+  public function refreshToken(Request $request, TahiniAccessToken $tahiniAccessToken) {
 
     if (!$payload = $this->processPayload($request)) {
       return $this->error("The payload is not correct.", Response::HTTP_BAD_REQUEST);
@@ -95,7 +95,7 @@ class Login extends AbstractTaiazController {
       return $this->error('The refresh token is missing', Response::HTTP_BAD_REQUEST);
     }
 
-    $access_token = $taliazAccessToken->refreshAccessToken($refresh_token);
+    $access_token = $tahiniAccessToken->refreshAccessToken($refresh_token);
 
     if (empty($access_token->id)) {
       return $this->error('It seems that the given refresh token does not exists.');

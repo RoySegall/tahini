@@ -21,7 +21,7 @@ class TahiniValidator {
   protected $validator;
 
     /**
-     * TaliazValidator constructor.
+     * TahiniValidator constructor.
      *
      * @param ValidatorInterface $validator
      *  The validator service.

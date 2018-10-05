@@ -21,8 +21,11 @@ class AppSandboxCommand extends Command
   /**
    * @var TahiniUser
    */
-  protected $taliazUser;
+  protected $tahiniUser;
 
+  /**
+   * @var TahiniAccessToken
+   */
   protected $accessToken;
 
   /**
@@ -31,12 +34,12 @@ class AppSandboxCommand extends Command
   protected $entityManager;
 
 
-  public function __construct(?string $name = null, TahiniUser $taliazUser, TahiniAccessToken $accessToken, \Doctrine\Common\Persistence\ManagerRegistry $registry) {
+  public function __construct(?string $name = null, TahiniUser $tahiniUser, TahiniAccessToken $accessToken, \Doctrine\Common\Persistence\ManagerRegistry $registry) {
     parent::__construct($name);
 
-    $this->taliazUser = $taliazUser;
+    $this->tahiniUser = $tahiniUser;
     $this->accessToken = $accessToken;
-    $this->entityManager = $registry->getManager('personal');
+    $this->entityManager = $registry->getManager();
   }
 
   protected function configure() {
@@ -44,7 +47,7 @@ class AppSandboxCommand extends Command
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $user = $this->taliazUser->findUserByUsername('admin');
+    $user = $this->tahiniUser->findUserByUsername('admin');
 
     $access_token = $this->accessToken->refreshAccessToken('$2y$12$syxxCHNIoZGCBrQEvhwaTuv4mNwgKyCMZFr0cf4I2OQ7Bnb7O8YJO');
 

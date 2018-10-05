@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 
-class TaliazUserServiceProvider implements UserProviderInterface {
+class TahiniUserServiceProvider implements UserProviderInterface {
 
   public function loadUserByUsername($username) {
     $user = new User();
