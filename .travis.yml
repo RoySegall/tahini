@@ -7,9 +7,10 @@ services:
 
 before_script:
   - composer self-update
-  - composer install
   - mysql -e 'CREATE DATABASE tahini;'
+  - cp .travis.env .env
   - cat .env
+  - composer install
 
 script:
   - echo "a"
