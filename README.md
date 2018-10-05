@@ -1,7 +1,8 @@
 # Tahini
-Welcome to Tahini. A temporary repo for Taliaz API server.
 
-Tahini stands for: **Ta**liaz **H**elath **In**itiative no. **I**.
+Tahini was a a project I created in a startup I worked for. The startup has some
+finance struggles and had to fire me. The CTO was kind enough and gave me the 
+option to use the new API I created for them as my own project. 
 
 ## Set up.
 
@@ -20,13 +21,11 @@ PERSONAL_DATABASE_URL=mysql://db_user:db_password@127.0.0.1:3306/db_name_persona
 After you got the DB settings up and running
 ```bash
 bin/console doctrine:database:create
-bin/console doctrine:database:create --connection=personal
 ```
 
 When you have changes in the entity you can do
 ```bash
 bin/console doctrine:schema:update --force
-bin/console doctrine:schema:update --em=personal --force
 ```
 
 ## Running the web server in development
