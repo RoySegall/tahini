@@ -6,8 +6,8 @@ services:
   - mysql
 
 env:
-  - TESTFOLDER=travis/cs.sh
-  - TESTFOLDER=travis/phpunit.sh
+  - SCRIPT=travis/cs.sh
+  - SCRIPT=travis/phpunit.sh
 
 before_script:
   - composer self-update
@@ -18,4 +18,4 @@ before_script:
   - composer install
   - bin/console doctrine:schema:create
 
-script: "bash $TESTFOLDER"
+script: "bash $SCRIPT"
