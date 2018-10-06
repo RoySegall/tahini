@@ -5,6 +5,10 @@ php: 7.2
 services:
   - mysql
 
+env:
+  - SCRIPT=travis/cs.sh
+  - SCRIPT=travis/phpunit.sh
+
 before_script:
   - composer self-update
   - mysql -e 'CREATE DATABASE tahini;'
@@ -14,6 +18,4 @@ before_script:
   - composer install
   - bin/console doctrine:schema:create
 
-script:
-  - vendor/bin/phpcs src --standard=PSR2 --colors
-  - php bin/phpunit
+script: "bash $SCRIPT"
