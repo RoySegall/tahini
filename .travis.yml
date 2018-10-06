@@ -5,6 +5,10 @@ php: 7.2
 services:
   - mysql
 
+env:
+  - TESTFOLDER=travis/cs.sh
+  - TESTFOLDER=travis/phpunit.sh
+
 before_script:
   - composer self-update
   - mysql -e 'CREATE DATABASE tahini;'
@@ -14,10 +18,4 @@ before_script:
   - composer install
   - bin/console doctrine:schema:create
 
-jobs:
-  include:
-    - stage: test
-      script: - vendor/bin/phpcs src --standard=PSR2 --colors
-
-    - stage: test
-      script: php bin/phpunit
+script: "bash $TESTFOLDER"
